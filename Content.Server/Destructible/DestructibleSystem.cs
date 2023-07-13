@@ -8,7 +8,9 @@ using Content.Server.Explosion.EntitySystems;
 using Content.Server.Fluids.EntitySystems;
 using Content.Server.Stack;
 using Content.Shared.Damage;
+using Content.Shared.Damage.Prototypes;
 using Content.Shared.Destructible;
+using Content.Shared.Examine;
 using Content.Shared.FixedPoint;
 using JetBrains.Annotations;
 using Robust.Server.GameObjects;
@@ -38,6 +40,7 @@ namespace Content.Server.Destructible
         {
             base.Initialize();
             SubscribeLocalEvent<DestructibleComponent, DamageChangedEvent>(Execute);
+            SubscribeLocalEvent<DestructibleComponent, ExaminedEvent>(OnDamagedExamine);
         }
 
         /// <summary>
@@ -93,6 +96,16 @@ namespace Content.Server.Destructible
             }
             return damageNeeded;
         }
+
+        /*
+        private void OnDamagedExamine(EntityUid uid, DestructibleComponent component, ExaminedEvent args)
+        {
+            var messageId = "bad test";
+            if (damageable.TotalDamage < DestroyedAt(uid, component))
+                messageId = "nerd.";
+            args.PushMarkup(Loc.GetString(messageId, ("target", uid)));
+            return;
+        }*/
     }
 
     // Currently only used for destructible integration tests. Unless other uses are found for this, maybe this should just be removed and the tests redone.

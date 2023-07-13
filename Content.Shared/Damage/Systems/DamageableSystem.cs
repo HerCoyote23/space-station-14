@@ -1,5 +1,6 @@
 using System.Linq;
 using Content.Shared.Damage.Prototypes;
+using Content.Shared.Examine;
 using Content.Shared.FixedPoint;
 using Content.Shared.Inventory;
 using Content.Shared.Mobs.Components;
@@ -27,6 +28,7 @@ namespace Content.Shared.Damage
             SubscribeLocalEvent<DamageableComponent, ComponentGetState>(DamageableGetState);
             SubscribeLocalEvent<DamageableComponent, OnIrradiatedEvent>(OnIrradiated);
             SubscribeLocalEvent<DamageableComponent, RejuvenateEvent>(OnRejuvenate);
+            SubscribeLocalEvent<DamageableComponent, ExaminedEvent>(OnDamagedExamine);
         }
 
         /// <summary>
@@ -292,6 +294,18 @@ namespace Content.Shared.Damage
                 component.Damage = newDamage;
                 DamageChanged(uid, component, delta);
             }
+        }
+
+        private void OnDamagedExamine(EntityUid uid, DamageableComponent component, ExaminedEvent args)
+        {
+            
+            if (TryComp<DestructibleComponent>(uid, out var destructible))
+                return;
+            var messageId = "bad test";
+            if (component.TotalDamage < destructible.DestroyedAt(uid, component))
+                messageId = "nerd.";
+            args.PushMarkup(Loc.GetString(messageId, ("target", uid)));
+            return;
         }
     }
 
