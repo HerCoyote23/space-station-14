@@ -1,4 +1,5 @@
 using System.Linq;
+using Content.Server.Destructible;
 using Content.Shared.Damage.Prototypes;
 using Content.Shared.Examine;
 using Content.Shared.FixedPoint;
@@ -303,7 +304,7 @@ namespace Content.Shared.Damage
                 return;
             var messageId = "bad test";
             if (component.TotalDamage < destructible.DestroyedAt(uid, component))
-                messageId = "nerd.";
+                messageId = "working.";
             args.PushMarkup(Loc.GetString(messageId, ("target", uid)));
             return;
         }
