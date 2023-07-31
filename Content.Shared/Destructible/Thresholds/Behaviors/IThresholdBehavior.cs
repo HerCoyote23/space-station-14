@@ -1,4 +1,4 @@
-﻿namespace Content.Server.Destructible.Thresholds.Behaviors
+namespace Content.Shared.Destructible.Thresholds.Behaviors
 {
     public interface IThresholdBehavior
     {

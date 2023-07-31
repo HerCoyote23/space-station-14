@@ -1,6 +1,6 @@
 using Robust.Shared.Containers;
 
-namespace Content.Server.Destructible.Thresholds.Behaviors
+namespace Content.Shared.Destructible.Thresholds.Behaviors
 {
     /// <summary>
     ///     Drop all items from all containers

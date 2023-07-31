@@ -1,4 +1,9 @@
-﻿namespace Content.Shared.Destructible;
+namespace Content.Shared.Destructible;
+
+using Content.Shared.FixedPoint;
+using Content.Shared.Damage.Prototypes;
+using Content.Shared.Destructible.Thresholds.Behaviors;
+using Content.Shared.Destructible.Thresholds.Triggers;
 
 public abstract class SharedDestructibleSystem : EntitySystem
 {
@@ -20,6 +25,31 @@ public abstract class SharedDestructibleSystem : EntitySystem
     {
         var eventArgs = new BreakageEventArgs();
         RaiseLocalEvent(owner, eventArgs);
+    }
+
+    public FixedPoint2 DestroyedAt(EntityUid uid, DestructibleComponent? destructible = null)
+    {
+        if (!Resolve(uid, ref destructible, logMissing: false))
+            return FixedPoint2.MaxValue;
+
+        // We have nested for loops here, but the vast majority of components only have one threshold with 1-3 behaviors.
+        // Really, this should probably just be a property of the damageable component.
+        var damageNeeded = FixedPoint2.MaxValue;
+        foreach (var threshold in destructible.Thresholds)
+        {
+            if (threshold.Trigger is not DamageTrigger trigger)
+                continue;
+
+            foreach (var behavior in threshold.Behaviors)
+            {
+                if (behavior is DoActsBehavior actBehavior &&
+                    actBehavior.HasAct(ThresholdActs.Destruction | ThresholdActs.Breakage))
+                {
+                    damageNeeded = Math.Min(damageNeeded.Float(), trigger.Damage);
+                }
+            }
+        }
+        return damageNeeded;
     }
 }
 

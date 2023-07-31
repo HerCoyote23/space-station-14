@@ -2,7 +2,7 @@ using Content.Shared.Audio;
 using Robust.Shared.Audio;
 using Robust.Shared.Player;
 
-namespace Content.Server.Destructible.Thresholds.Behaviors
+namespace Content.Shared.Destructible.Thresholds.Behaviors
 {
     [Serializable]
     [DataDefinition]

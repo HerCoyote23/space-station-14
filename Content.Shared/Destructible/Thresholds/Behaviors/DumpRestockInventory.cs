@@ -3,7 +3,7 @@ using Content.Shared.Stacks;
 using Content.Shared.Prototypes;
 using Content.Shared.VendingMachines;
 
-namespace Content.Server.Destructible.Thresholds.Behaviors
+namespace Content.Shared.Destructible.Thresholds.Behaviors
 {
     /// <summary>
     ///     Spawns a portion of the total items from one of the canRestock

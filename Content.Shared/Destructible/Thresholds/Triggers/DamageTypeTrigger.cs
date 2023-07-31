@@ -2,7 +2,7 @@ using Content.Shared.Damage;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
 using Content.Shared.Damage.Prototypes;
 
-namespace Content.Server.Destructible.Thresholds.Triggers
+namespace Content.Shared.Destructible.Thresholds.Triggers
 {
     /// <summary>
     ///     A trigger that will activate when the amount of damage received

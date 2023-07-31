@@ -1,6 +1,6 @@
 using Content.Shared.Damage;
 
-namespace Content.Server.Destructible.Thresholds.Triggers
+namespace Content.Shared.Destructible.Thresholds.Triggers
 {
     /// <summary>
     ///     A trigger that will activate when all of its triggers have activated.

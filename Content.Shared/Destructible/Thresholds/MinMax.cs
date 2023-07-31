@@ -1,4 +1,4 @@
-﻿namespace Content.Server.Destructible.Thresholds
+namespace Content.Shared.Destructible.Thresholds
 {
     [Serializable]
     [DataDefinition]

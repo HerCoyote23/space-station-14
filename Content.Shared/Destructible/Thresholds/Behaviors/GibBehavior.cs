@@ -1,7 +1,7 @@
 using Content.Shared.Body.Components;
 using JetBrains.Annotations;
 
-namespace Content.Server.Destructible.Thresholds.Behaviors
+namespace Content.Shared.Destructible.Thresholds.Behaviors
 {
     [UsedImplicitly]
     [DataDefinition]

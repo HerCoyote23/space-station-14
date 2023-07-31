@@ -1,6 +1,6 @@
-using Content.Server.Destructible.Thresholds;
+using Content.Shared.Destructible.Thresholds;
 
-namespace Content.Server.Destructible
+namespace Content.Shared.Destructible
 {
     /// <summary>
     ///     When attached to an <see cref="Robust.Shared.GameObjects.EntityUid"/>, allows it to take damage

@@ -40,7 +40,7 @@ namespace Content.Server.Destructible
         {
             base.Initialize();
             SubscribeLocalEvent<DestructibleComponent, DamageChangedEvent>(Execute);
-            SubscribeLocalEvent<DestructibleComponent, ExaminedEvent>(OnDamagedExamine);
+        //    SubscribeLocalEvent<DestructibleComponent, ExaminedEvent>(OnDamagedExamine);
         }
 
         /// <summary>
@@ -72,30 +72,7 @@ namespace Content.Server.Destructible
         ///     This assumes that this entity has some sort of destruction or breakage behavior triggered by a
         ///     total-damage threshold.
         /// </remarks>
-        public FixedPoint2 DestroyedAt(EntityUid uid, DestructibleComponent? destructible = null)
-        {
-            if (!Resolve(uid, ref destructible, logMissing: false))
-                return FixedPoint2.MaxValue;
 
-            // We have nested for loops here, but the vast majority of components only have one threshold with 1-3 behaviors.
-            // Really, this should probably just be a property of the damageable component.
-            var damageNeeded = FixedPoint2.MaxValue;
-            foreach (var threshold in destructible.Thresholds)
-            {
-                if (threshold.Trigger is not DamageTrigger trigger)
-                    continue;
-
-                foreach (var behavior in threshold.Behaviors)
-                {
-                    if (behavior is DoActsBehavior actBehavior &&
-                        actBehavior.HasAct(ThresholdActs.Destruction | ThresholdActs.Breakage))
-                    {
-                        damageNeeded = Math.Min(damageNeeded.Float(), trigger.Damage);
-                    }
-                }
-            }
-            return damageNeeded;
-        }
 
         /*
         private void OnDamagedExamine(EntityUid uid, DestructibleComponent component, ExaminedEvent args)

@@ -1,6 +1,6 @@
 using Content.Shared.Damage;
 
-namespace Content.Server.Destructible.Thresholds.Triggers
+namespace Content.Shared.Destructible.Thresholds.Triggers
 {
     public interface IThresholdTrigger
     {
