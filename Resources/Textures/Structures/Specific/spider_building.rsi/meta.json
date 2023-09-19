@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Add source",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "egg",
+      "directions": 1
+    },
+    {
+      "name": "egg_enriched",
+      "directions": 1
+    }
+  ]
+}
