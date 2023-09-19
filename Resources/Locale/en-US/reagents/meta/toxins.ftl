@@ -1,6 +1,9 @@
 reagent-name-toxin = toxin
 reagent-desc-toxin = An unsurprisingly toxic chemical. Available at an emagged chem dispenser.
 
+reagent-name-venom = venom
+reagent-desc-venom = A slow acting poison often found in spiders.
+
 reagent-name-carpotoxin = carpotoxin
 reagent-desc-carpotoxin = A highly toxic reagent found in space carps. Causes a painful burning sensation.
 
@@ -63,3 +66,6 @@ reagent-desc-honk = A toxin found in bananium. Causes severe honking and interna
 
 reagent-name-lead = lead
 reagent-desc-lead = A slow-acting but incredibly lethal toxin found in steel, albiet in trace amounts. Tasteless.
+
+reagent-name-bungotoxin = bungotoxin
+reagent-desc-bungotoxin = A moderately slow-acting poison found within the pit of the bungo fruit.

@@ -57,6 +57,17 @@
 
 - type: entity
   parent: BaseGameRule
+  id: ClosetSkeleton
+  noSpawn: true
+  components:
+  - type: StationEvent
+    weight: 10
+    duration: 1
+  - type: RandomEntityStorageSpawnRule
+    prototype: MobSkeletonCloset
+
+- type: entity
+  parent: BaseGameRule
   id: Dragon
   noSpawn: true
   components:
@@ -302,8 +313,14 @@
     duration: 60
   - type: VentCrittersRule
     entries:
-    - id: MobGiantSpiderAngry
-      prob: 0.05
+    - id: MobHunterSpiderAngry
+      prob: 0.025
+    - id: MobGuardSpiderAngry
+      prob: 0.0225
+    - id: MobTarantulaSpiderAngry
+      prob: 0.00125
+    - id: MobViperSpiderAngry
+      prob: 0.00125
 
 - type: entity
   id: SpiderClownSpawn

@@ -10,6 +10,17 @@
     useDelay: 25
 
 - type: entity
+  id: ActionSpiderLayEgg
+  name: action-name-lay-egg
+  description: action-description-lay-egg
+  components:
+  - type: InstantAction
+    icon: Structures/Specific/spider_building.rsi/egg.png
+    event: !type:EggLayInstantActionEvent
+    useDelay: 5
+    
+
+- type: entity
   id: ActionSericulture
   name: Weave silk
   description: Weave a bit of silk for use in arts and crafts.

@@ -34,7 +34,7 @@
       ]
     },
     {
-      "name": "midwife",
+      "name": "broodmother",
       "directions": 4,
       "delays": [
         [
@@ -172,7 +172,7 @@
       ]
     },
     {
-      "name": "midwife_dead",
+      "name": "broodmother_dead",
       "delays": [
         [
           1

@@ -1,3 +1,4 @@
+using Content.Shared.DoAfter;
 using Content.Shared.Storage;
 using Robust.Shared.Audio;
 using Robust.Shared.Prototypes;
@@ -18,6 +19,13 @@ public sealed partial class EggLayerComponent : Component
     [ViewVariables(VVAccess.ReadWrite)]
     [DataField("hungerUsage")]
     public float HungerUsage = 60f;
+
+    /// <summary>
+    ///     Time taken to lay an egg
+    /// </summary>
+    [ViewVariables(VVAccess.ReadWrite)]
+    [DataField("eggLayTime")]
+    public float EggLayTime = 0f;
 
     /// <summary>
     ///     Minimum cooldown used for the automatic egg laying.
@@ -49,3 +57,9 @@ public sealed partial class EggLayerComponent : Component
     [DataField("accumulatedFrametime")]
     public float AccumulatedFrametime;
 }
+
+//public sealed partial class EggLayInstantActionEvent : InstantActionEvent {}
+
+//[Serializable, NetSerializable]
+public sealed partial class EggLayDoAfterEvent : SimpleDoAfterEvent {}
+
