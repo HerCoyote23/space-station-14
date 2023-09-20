@@ -28,12 +28,6 @@ public sealed partial class SpiderEggLayerComponent : Component
     [DataField("enrichment")]
     public int Enrichment = 0;
 
-    /*
-    [ViewVariables(VVAccess.ReadWrite)]
-    [DataField("eggSpawn", required: true)]
-    public List<EntitySpawnEntry> EggSpawn = default!;
-    */
-
     [ViewVariables(VVAccess.ReadWrite)]
     [DataField("eggSpawn")]
     public string EggSpawn = "SpiderEgg";

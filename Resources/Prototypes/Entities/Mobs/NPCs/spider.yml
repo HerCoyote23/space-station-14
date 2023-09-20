@@ -435,7 +435,7 @@
     state: egg
   - type: Damageable
     damageContainer: Inorganic
-    damageModifierSet: Metallic
+    damageModifierSet: Web
   - type: Destructible
     thresholds:
     - trigger:
@@ -447,4 +447,5 @@
   - type: Physics
     canCollide: false
     bodyType: static
+  - type: SpiderEgg
 

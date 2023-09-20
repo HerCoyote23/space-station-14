@@ -6,17 +6,16 @@ using Content.Shared.DoAfter;
 using Content.Shared.Spider.Components;
 using Content.Shared.Spider.Systems;
 using Content.Shared.Storage;
+using Content.Shared.Maps;
 using Robust.Server.GameObjects;
 using Robust.Shared.Player;
+using Robust.Shared.Map;
 using Robust.Shared.Network;
-
-using Content.Shared.Animals.Components;
 
 namespace Content.Server.Spider.Systems;
 
 public sealed class SpiderEggLayerSystem : EntitySystem
 {
-    [Dependency] private readonly ActionsSystem _actions = default!;
     [Dependency] private readonly SharedActionsSystem _action = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
     [Dependency] private readonly DoAfterSystem _doAfterSystem = default!;
@@ -54,15 +53,29 @@ public sealed class SpiderEggLayerSystem : EntitySystem
             return false;
         }
 
-        var doAfter = new DoAfterArgs(EntityManager, uid, component.EggLayTime, new SpiderEggLayDoAfterEvent(), uid)
+        var transform = Transform(uid);
+
+        if (transform.GridUid == null)
         {
-            BreakOnDamage = true,
-            BreakOnUserMove = true,
-            MovementThreshold = 0.1f,
-        };
+            //_popup.PopupEntity(Loc.GetString("spider-web-action-nogrid"), args.Performer, args.Performer);
+            return false;
+        }
 
-        return (_doAfterSystem.TryStartDoAfter(doAfter));
+        var coords = transform.Coordinates;
 
+        if (!IsTileBlockedByEgg(coords))
+        {
+            var doAfter = new DoAfterArgs(EntityManager, uid, component.EggLayTime, new SpiderEggLayDoAfterEvent(), uid)
+            {
+                BreakOnDamage = true,
+                BreakOnUserMove = true,
+                MovementThreshold = 0.2f,
+            };
+
+            return (_doAfterSystem.TryStartDoAfter(doAfter));
+        }
+
+        return false;
     }
 
     private void OnDoAfter(EntityUid uid, SpiderEggLayerComponent component, SpiderEggLayDoAfterEvent args) {
@@ -73,12 +86,23 @@ public sealed class SpiderEggLayerSystem : EntitySystem
         }
 
         Spawn(component.EggSpawn, Transform(uid).Coordinates);
-
+        
         // Sound + popups
         _audio.PlayPvs(component.EggLaySound, uid);
         _popup.PopupEntity(Loc.GetString("action-popup-lay-egg-user"), uid, uid);
         _popup.PopupEntity(Loc.GetString("action-popup-lay-egg-others", ("entity", uid)), uid, Filter.PvsExcept(uid), true);
 
         args.Handled = true;
+    }
+
+    //Checks if there's already an egg on the tile
+    private bool IsTileBlockedByEgg(EntityCoordinates coords)
+    {
+        foreach (var entity in coords.GetEntitiesInTile())
+        {
+            if (HasComp<SpiderEggComponent>(entity))
+                return true;
+        }
+        return false;
     }
 }
