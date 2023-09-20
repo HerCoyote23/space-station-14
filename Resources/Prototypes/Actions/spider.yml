@@ -11,14 +11,11 @@
 
 - type: entity
   id: ActionSpiderLayEgg
-  name: action-name-lay-egg
-  description: action-description-lay-egg
+  parent: ActionAnimalLayEgg
   components:
   - type: InstantAction
     icon: Structures/Specific/spider_building.rsi/egg.png
-    event: !type:EggLayInstantActionEvent
-    useDelay: 5
-    
+    useDelay: 0.5
 
 - type: entity
   id: ActionSericulture

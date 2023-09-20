@@ -1,5 +1,4 @@
 using Content.Server.Actions;
-using Content.Server.Animals.Components;
 using Content.Server.DoAfter;
 using Content.Server.Popups;
 using Content.Shared.Actions.Events;
@@ -10,6 +9,8 @@ using Content.Shared.Storage;
 using Robust.Server.GameObjects;
 using Robust.Shared.Player;
 using Robust.Shared.Random;
+
+using Content.Shared.Animals.Components;
 
 namespace Content.Server.Animals.Systems;
 
@@ -69,21 +70,21 @@ public sealed class EggLayerSystem : EntitySystem
         args.Handled = TryLayEgg(uid, component);
     }
 
-    public bool TryLayEgg(EntityUid uid, EggLayerComponent component)
-    {/*
+    public bool TryLayEgg(EntityUid uid, EggLayerComponent? component)
+    {
         if (!Resolve(uid, ref component))
         {
             return false;
-        }*/
+        }
 
-        _doAfter.TryStartDoAfter(new DoAfterArgs(EntityManager, uid, component.EggLayTime, new EggLayDoAfterEvent(), null)
+        var doAfter = new DoAfterArgs(EntityManager, uid, component.EggLayTime, new EggLayDoAfterEvent(), uid)
         {
             BreakOnDamage = true,
             BreakOnUserMove = true,
             MovementThreshold = 0.1f,
-        });
+        };
 
-        return true;
+        return (_doAfterSystem.TryStartDoAfter(doAfter));
 
     }
 

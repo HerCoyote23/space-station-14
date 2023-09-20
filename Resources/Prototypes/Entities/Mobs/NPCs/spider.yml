@@ -257,11 +257,12 @@
     damage:
       types:
         Piercing: 7
-  - type: EggLayer 
+  - type: EggLayer
     eggSpawn:
     - id: SpiderEgg
+    EggLayAction: ActionSpiderLayEgg
     hungerUsage: 0
-    #eggLayTime: 100
+    eggLayTime: 1
 
 - type: entity
   id: FoodEggSpiderFertilized
