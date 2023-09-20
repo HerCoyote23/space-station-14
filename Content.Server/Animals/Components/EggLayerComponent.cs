@@ -25,7 +25,7 @@ public sealed partial class EggLayerComponent : Component
     /// </summary>
     [ViewVariables(VVAccess.ReadWrite)]
     [DataField("eggLayTime")]
-    public float EggLayTime = 0f;
+    public TimeSpan EggLayTime = TimeSpan.FromSeconds(1);
 
     /// <summary>
     ///     Minimum cooldown used for the automatic egg laying.

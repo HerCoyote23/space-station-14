@@ -261,7 +261,7 @@
     eggSpawn:
     - id: SpiderEgg
     hungerUsage: 0
-    eggLayTime: 100
+    #eggLayTime: 100
 
 - type: entity
   id: FoodEggSpiderFertilized

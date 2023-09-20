@@ -15,7 +15,7 @@
   description: action-description-lay-egg
   components:
   - type: InstantAction
-    icon: Interface/Actions/web.png #Structures/Specific/spider_building.rsi/egg.png
+    icon: Structures/Specific/spider_building.rsi/egg.png
     event: !type:EggLayInstantActionEvent
     useDelay: 5
     

@@ -69,20 +69,19 @@ public sealed class EggLayerSystem : EntitySystem
         args.Handled = TryLayEgg(uid, component);
     }
 
-    public bool TryLayEgg(EntityUid uid, EggLayerComponent? component)
-    {
+    public bool TryLayEgg(EntityUid uid, EggLayerComponent component)
+    {/*
         if (!Resolve(uid, ref component))
+        {
             return false;
+        }*/
 
-        //if (component.EggLayTime > 0) {
-
-        _doAfterSystem.TryStartDoAfter(new DoAfterArgs(EntityManager, uid, component.EggLayTime, new EggLayDoAfterEvent(), null, null, null)
+        _doAfter.TryStartDoAfter(new DoAfterArgs(EntityManager, uid, component.EggLayTime, new EggLayDoAfterEvent(), null)
         {
             BreakOnDamage = true,
             BreakOnUserMove = true,
             MovementThreshold = 0.1f,
         });
-        //}
 
         return true;
 
