@@ -55,15 +55,24 @@ public sealed class SpiderTargetedHealSystem : EntitySystem
         args.Handled = true;
         var target = args.Target;
 
+        if (args.Target == uid)
+        {
+            _popup.PopupEntity(Loc.GetString("You cannot heal yourself"), uid, uid);
+            return;
+        }
+
         // Heal all bleeding.
         if (TryComp<BloodstreamComponent>(target, out var bloodstream))
         {
             var bleedAmount = bloodstream.BleedAmount;
+
             if (bleedAmount > 0)
             {
                 _bloodstreamSystem.TryModifyBleedAmount(target, -bleedAmount);
                 _popup.PopupEntity(Loc.GetString("medical-item-stop-bleeding"), uid, uid);
             }
+
+            _bloodstreamSystem.TryModifyBloodLevel(target, component.BloodHealing);
         }
 
     }

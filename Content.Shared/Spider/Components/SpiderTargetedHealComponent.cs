@@ -21,6 +21,10 @@ public sealed partial class SpiderTargetedHealComponent : Component
     [DataField("percentHealing")]
     public int PercentHealing = 20;
 
+    [ViewVariables(VVAccess.ReadWrite)]
+    [DataField("bloodHealing")]
+    public int BloodHealing = 25;
+
     [DataField("healingSound")]
     public SoundSpecifier HealingSound = new SoundPathSpecifier("/Audio/Effects/pop.ogg");
 }
