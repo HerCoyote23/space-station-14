@@ -1,7 +1,10 @@
 using Content.Server.Actions;
+using Content.Server.Body.Components;
+using Content.Server.Body.Systems;
 using Content.Server.DoAfter;
 using Content.Server.Popups;
 using Content.Shared.Actions;
+using Content.Shared.Damage;
 using Content.Shared.DoAfter;
 using Content.Shared.Spider.Components;
 using Content.Shared.Spider.Systems;
@@ -14,7 +17,7 @@ using Robust.Shared.Network;
 
 namespace Content.Server.Spider.Systems;
 
-public sealed class SpiderEggLayerSystem : EntitySystem
+public sealed class SpiderTargetedHealSystem : EntitySystem
 {
     [Dependency] private readonly SharedActionsSystem _action = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
@@ -22,6 +25,8 @@ public sealed class SpiderEggLayerSystem : EntitySystem
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
     [Dependency] private readonly PopupSystem _popup = default!;
 
+    [Dependency] private readonly BloodstreamSystem _bloodstreamSystem = default!;
+    [Dependency] private readonly DamageableSystem _damageable = default!;
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
     [Dependency] private readonly INetManager _net = default!;
 
@@ -29,57 +34,51 @@ public sealed class SpiderEggLayerSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<SpiderEggLayerComponent, ComponentInit>(OnComponentInit);
-        SubscribeLocalEvent<SpiderEggLayerComponent, SpiderEggLayInstantActionEvent>(OnSpiderEggLayAction);
-        SubscribeLocalEvent<SpiderEggLayerComponent, SpiderEggLayDoAfterEvent>(OnDoAfter);
+        SubscribeLocalEvent<SpiderTargetedHealComponent, ComponentInit>(OnComponentInit);
+        SubscribeLocalEvent<SpiderTargetedHealComponent, SpiderTargetedHealEntityTargetActionEvent>(OnSpiderTargetedHealAction);
+        //SubscribeLocalEvent<SpiderTargetedHealComponent, SpiderEggLayDoAfterEvent>(OnDoAfter);
     }
 
-    private void OnComponentInit(EntityUid uid, SpiderEggLayerComponent component, ComponentInit args)
+    private void OnComponentInit(EntityUid uid, SpiderTargetedHealComponent component, ComponentInit args)
     {
         if (_net.IsClient)
             return;
 
-        _action.AddAction(uid, Spawn(component.SpiderEggLayAction), null);
+        _action.AddAction(uid, Spawn(component.SpiderTargetedHealAction), null);
     }
 
-    private void OnSpiderEggLayAction(EntityUid uid, SpiderEggLayerComponent component, SpiderEggLayInstantActionEvent args)
+    private void OnSpiderTargetedHealAction(EntityUid uid, SpiderTargetedHealComponent component, SpiderTargetedHealEntityTargetActionEvent args)
     {
-        args.Handled = TryLayEgg(uid, component);
+        if (args.Handled || !(HasComp<SpiderComponent>(args.Target)))
+            return;
+
+        args.Handled = true;
+        var target = args.Target;
+
+        // Heal all bleeding.
+        if (TryComp<BloodstreamComponent>(target, out var bloodstream))
+        {
+            var bleedAmount = bloodstream.BleedAmount;
+            if (bleedAmount > 0)
+            {
+                _bloodstreamSystem.TryModifyBleedAmount(target, -bleedAmount);
+                _popup.PopupEntity(Loc.GetString("medical-item-stop-bleeding"), uid, uid);
+            }
+        }
+
     }
 
-    public bool TryLayEgg(EntityUid uid, SpiderEggLayerComponent? component)
+    public bool TryTargetedHeal(EntityUid uid, SpiderTargetedHealComponent? component)
     {
         if (!Resolve(uid, ref component))
         {
             return false;
         }
-
-        var transform = Transform(uid);
-
-        if (transform.GridUid == null)
-        {
-            //_popup.PopupEntity(Loc.GetString("spider-web-action-nogrid"), args.Performer, args.Performer);
-            return false;
-        }
-
-        var coords = transform.Coordinates;
-
-        if (!IsTileBlockedByEgg(coords))
-        {
-            var doAfter = new DoAfterArgs(EntityManager, uid, component.EggLayTime, new SpiderEggLayDoAfterEvent(), uid)
-            {
-                BreakOnDamage = true,
-                BreakOnUserMove = true,
-                MovementThreshold = 0.2f,
-            };
-
-            return (_doAfterSystem.TryStartDoAfter(doAfter));
-        }
-
         return false;
     }
 
-    private void OnDoAfter(EntityUid uid, SpiderEggLayerComponent component, SpiderEggLayDoAfterEvent args) {
+    private void OnDoAfter(EntityUid uid, SpiderEggLayerComponent component, SpiderEggLayDoAfterEvent args)
+    {
 
         if (args.Cancelled || args.Handled)
         {
@@ -87,7 +86,7 @@ public sealed class SpiderEggLayerSystem : EntitySystem
         }
 
         Spawn(component.EggSpawn, Transform(uid).Coordinates);
-        
+
         // Sound + popups
         _audio.PlayPvs(component.EggLaySound, uid);
         _popup.PopupEntity(Loc.GetString("action-popup-lay-egg-user"), uid, uid);

@@ -66,6 +66,7 @@
     interactFailureString: petting-failure-generic
   - type: NoSlip
   - type: Spider
+    webMakingTime: 5
   - type: IgnoreSpiderWeb
   - type: Bloodstream
     bloodMaxVolume: 150
@@ -101,7 +102,7 @@
   - type: MeleeWeapon
     damage:
       types:
-        Piercing: 4.8
+        Piercing: 8
   - type: SolutionContainerManager
     solutions:
       melee:
@@ -109,7 +110,7 @@
         - ReagentId: Toxin
           Quantity: 50
   - type: MeleeChemicalInjector
-    transferAmount: 0.75
+    transferAmount: 1
     solution: melee
 
 - type: entity
@@ -142,7 +143,39 @@
   - type: MeleeWeapon
     damage:
       types:
-        Piercing: 6.4
+        Piercing: 16
+
+- type: entity
+  name: nurse
+  parent: MobBaseSpider
+  id: MobNurseSpider
+  components:
+  - type: Sprite
+    layers:
+    - map: ["enum.DamageStateVisualLayers.Base"]
+      state: nurse
+      sprite: Mobs/Animals/spider.rsi
+  - type: DamageStateVisuals
+    states:
+      Alive:
+        Base: nurse
+      Dead:
+        Base: nurse_dead
+  - type: MobThresholds
+    thresholds:
+      0: Alive
+      40: Dead
+  - type: MovementSpeedModifier
+    baseWalkSpeed : 4.3
+    baseSprintSpeed : 4.3
+  - type: SlowOnDamage
+    speedModifierThresholds:
+      32: 0.7
+      35: 0.5
+  - type: MeleeWeapon
+    damage:
+      types:
+        Piercing: 6
   - type: SolutionContainerManager
     solutions:
       melee:
@@ -150,8 +183,9 @@
         - ReagentId: Toxin
           Quantity: 50
   - type: MeleeChemicalInjector
-    transferAmount: .25
+    transferAmount: 0.25
     solution: melee
+  - type: SpiderTargetedHeal
 
 - type: entity
   name: viper

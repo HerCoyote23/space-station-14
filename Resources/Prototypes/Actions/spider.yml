@@ -18,7 +18,18 @@
     icon: Structures/Specific/spider_building.rsi/egg.png
     event: !type:SpiderEggLayInstantActionEvent
     useDelay: 1
-    
+
+- type: entity
+  id: ActionSpiderTargetedHeal
+  name: action-name-spider-targeted-heal
+  description: action-description-spider-targeted-heal
+  noSpawn: true
+  components:
+  - type: EntityTargetAction
+    icon: { sprite : Interface/Actions/devour.rsi, state: icon }
+    iconOn: { sprite : Interface/Actions/devour.rsi, state: icon-on }
+    event: !type:SpiderTargetedHealEntityTargetActionEvent
+    useDelay: 1
 
 - type: entity
   id: ActionSericulture
