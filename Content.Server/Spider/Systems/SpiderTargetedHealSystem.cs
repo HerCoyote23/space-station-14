@@ -6,7 +6,10 @@ using Content.Server.Popups;
 using Content.Shared.Actions;
 using Content.Shared.Damage;
 using Content.Shared.DoAfter;
+using Content.Shared.FixedPoint;
+using Content.Shared.Mobs.Components;
 using Content.Shared.Spider.Components;
+using Content.Shared.Mobs;
 using Content.Shared.Spider.Systems;
 using Content.Shared.Storage;
 using Content.Shared.Maps;
@@ -14,6 +17,7 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Player;
 using Robust.Shared.Map;
 using Robust.Shared.Network;
+using Robust.Shared.Network.Messages;
 
 namespace Content.Server.Spider.Systems;
 
@@ -75,6 +79,33 @@ public sealed class SpiderTargetedHealSystem : EntitySystem
             _bloodstreamSystem.TryModifyBloodLevel(target, component.BloodHealing);
         }
 
+        // Heal % max health damage.
+        if (TryComp<DamageableComponent>(target, out var damage) && TryComp<MobThresholdsComponent>(target, out var thresholds))
+        {
+            if (thresholds == null)
+                return;
+
+            var dict = thresholds.Thresholds.GetEnumerator();
+            
+
+            //var deathThreshold = thresholds.Thresholds.ContainsValue(MobState.Dead);
+            //var totalDamage = damage.TotalDamage;
+
+            //if (thresholds.Thresholds.TryGetValue(MobState.Dead, out var deathThreshold) && damage.TotalDamage == 0)
+
+
+            {
+                _popup.PopupEntity(Loc.GetString(dict.3), uid, uid);
+                //_damageable.TryChangeDamage(target, deathThreshold, true, origin: uid);
+                _popup.PopupEntity(Loc.GetString("Damage Healed"), uid, uid);
+            }
+
+            /*if (damage.TotalDamage = 0)
+            {
+                _damageable.TryChangeDamage(target, -damage.Damage, true, origin: uid);
+                _popup.PopupEntity(Loc.GetString("Damage Healed"), uid, uid);
+            }*/
+        }
     }
 
     public bool TryTargetedHeal(EntityUid uid, SpiderTargetedHealComponent? component)
