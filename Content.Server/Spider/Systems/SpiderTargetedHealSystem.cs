@@ -40,7 +40,7 @@ public sealed class SpiderTargetedHealSystem : EntitySystem
 
         SubscribeLocalEvent<SpiderTargetedHealComponent, ComponentInit>(OnComponentInit);
         SubscribeLocalEvent<SpiderTargetedHealComponent, SpiderTargetedHealEntityTargetActionEvent>(OnSpiderTargetedHealAction);
-        //SubscribeLocalEvent<SpiderTargetedHealComponent, SpiderEggLayDoAfterEvent>(OnDoAfter);
+        SubscribeLocalEvent<SpiderTargetedHealComponent, SpiderTargetedHealDoAfterEvent>(OnDoAfter);
     }
 
     private void OnComponentInit(EntityUid uid, SpiderTargetedHealComponent component, ComponentInit args)
@@ -56,81 +56,87 @@ public sealed class SpiderTargetedHealSystem : EntitySystem
         if (args.Handled || !(HasComp<SpiderComponent>(args.Target)))
             return;
 
-        args.Handled = true;
+        args.Handled = TryTargetedHeal(uid, component, args.Target);
+    }
+
+    public bool TryTargetedHeal(EntityUid uid, SpiderTargetedHealComponent? component, EntityUid target)
+    {
+        if (!Resolve(uid, ref component))
+        {
+            return false;
+        }
+
+        var doAfter = new DoAfterArgs(EntityManager, uid, component.HealTime, new SpiderTargetedHealDoAfterEvent(), null, target: target)
+        {
+            BreakOnDamage = true,
+            BreakOnTargetMove = true,
+            BreakOnUserMove = true,
+            MovementThreshold = 0.2f,
+        };
+
+        return _doAfterSystem.TryStartDoAfter(doAfter);
+    }
+
+    private void OnDoAfter(EntityUid uid, SpiderTargetedHealComponent component, SpiderTargetedHealDoAfterEvent args)
+    {
+        
+        if (args.Cancelled || args.Handled)
+        {
+            return;
+        }
+
         var target = args.Target;
 
-        if (args.Target == uid)
+        if (target == null)
+        {
+            return;
+        }
+
+        if (target == uid)
         {
             _popup.PopupEntity(Loc.GetString("You cannot heal yourself"), uid, uid);
             return;
         }
 
-        // Heal all bleeding.
+        // Heal all bleeding, and restore some blood.
         if (TryComp<BloodstreamComponent>(target, out var bloodstream))
         {
             var bleedAmount = bloodstream.BleedAmount;
 
             if (bleedAmount > 0)
             {
-                _bloodstreamSystem.TryModifyBleedAmount(target, -bleedAmount);
-                _popup.PopupEntity(Loc.GetString("medical-item-stop-bleeding"), uid, uid);
+                _bloodstreamSystem.TryModifyBleedAmount((EntityUid) target, -bleedAmount);
             }
 
-            _bloodstreamSystem.TryModifyBloodLevel(target, component.BloodHealing);
+            _bloodstreamSystem.TryModifyBloodLevel((EntityUid) target, component.BloodHealing);
         }
 
-        // Heal % max health damage.
-        if (TryComp<DamageableComponent>(target, out var damage) && TryComp<MobThresholdsComponent>(target, out var thresholds))
+        // I meant to make this heal % max health, but that was very difficult. Healing a % of current damage + a flat damage achieves a similar effect.
+        if (TryComp<DamageableComponent>(target, out var damage))
         {
-            if (thresholds == null)
-                return;
+            DamageSpecifier finalHealing = new(damage.Damage);
 
-            var dict = thresholds.Thresholds.GetEnumerator();
-            
+            int count = 0;
 
-            //var deathThreshold = thresholds.Thresholds.ContainsValue(MobState.Dead);
-            //var totalDamage = damage.TotalDamage;
-
-            //if (thresholds.Thresholds.TryGetValue(MobState.Dead, out var deathThreshold) && damage.TotalDamage == 0)
-
-
+            foreach (var val in finalHealing.DamageDict.Values)
             {
-                _popup.PopupEntity(Loc.GetString(dict.3), uid, uid);
-                //_damageable.TryChangeDamage(target, deathThreshold, true, origin: uid);
-                _popup.PopupEntity(Loc.GetString("Damage Healed"), uid, uid);
+                if (val > 0)
+                {
+                    count++;
+                }
             }
 
-            /*if (damage.TotalDamage = 0)
+            var totalHealing = (damage.TotalDamage * (component.PercentHealing / 100)) + component.FlatHealing;
+            var categoryHealing = totalHealing / count;
+
+            foreach (var (key, value) in finalHealing.DamageDict)
             {
-                _damageable.TryChangeDamage(target, -damage.Damage, true, origin: uid);
-                _popup.PopupEntity(Loc.GetString("Damage Healed"), uid, uid);
-            }*/
+                finalHealing.DamageDict[key] = -categoryHealing;
+            }
+
+            _damageable.TryChangeDamage(target, finalHealing, true, origin: uid);
+            _popup.PopupEntity(Loc.GetString("Damage Healed"), uid, uid);
         }
-    }
-
-    public bool TryTargetedHeal(EntityUid uid, SpiderTargetedHealComponent? component)
-    {
-        if (!Resolve(uid, ref component))
-        {
-            return false;
-        }
-        return false;
-    }
-
-    private void OnDoAfter(EntityUid uid, SpiderEggLayerComponent component, SpiderEggLayDoAfterEvent args)
-    {
-
-        if (args.Cancelled || args.Handled)
-        {
-            return;
-        }
-
-        Spawn(component.EggSpawn, Transform(uid).Coordinates);
-
-        // Sound + popups
-        _audio.PlayPvs(component.EggLaySound, uid);
-        _popup.PopupEntity(Loc.GetString("action-popup-lay-egg-user"), uid, uid);
-        _popup.PopupEntity(Loc.GetString("action-popup-lay-egg-others", ("entity", uid)), uid, Filter.PvsExcept(uid), true);
 
         args.Handled = true;
     }

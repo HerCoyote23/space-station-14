@@ -19,15 +19,26 @@ public sealed partial class SpiderTargetedHealComponent : Component
 
     [ViewVariables(VVAccess.ReadWrite)]
     [DataField("percentHealing")]
-    public int PercentHealing = 20;
+    public double PercentHealing = 20;
+
+    [ViewVariables(VVAccess.ReadWrite)]
+    [DataField("flatHealing")]
+    public int FlatHealing = 10;
 
     [ViewVariables(VVAccess.ReadWrite)]
     [DataField("bloodHealing")]
     public int BloodHealing = 25;
+
+    [ViewVariables(VVAccess.ReadWrite)]
+    [DataField("healTime")]
+    public int HealTime = 10;
 
     [DataField("healingSound")]
     public SoundSpecifier HealingSound = new SoundPathSpecifier("/Audio/Effects/pop.ogg");
 }
 
 public sealed partial class SpiderTargetedHealEntityTargetActionEvent : EntityTargetActionEvent { }
+
+[Serializable, NetSerializable]
+public sealed partial class SpiderTargetedHealDoAfterEvent : SimpleDoAfterEvent { }
 
