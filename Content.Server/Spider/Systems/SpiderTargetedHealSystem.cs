@@ -26,12 +26,9 @@ public sealed class SpiderTargetedHealSystem : EntitySystem
     [Dependency] private readonly SharedActionsSystem _action = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
     [Dependency] private readonly DoAfterSystem _doAfterSystem = default!;
-    [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
     [Dependency] private readonly PopupSystem _popup = default!;
-
     [Dependency] private readonly BloodstreamSystem _bloodstreamSystem = default!;
     [Dependency] private readonly DamageableSystem _damageable = default!;
-    [Dependency] private readonly EntityLookupSystem _lookup = default!;
     [Dependency] private readonly INetManager _net = default!;
 
     public override void Initialize()
@@ -54,7 +51,10 @@ public sealed class SpiderTargetedHealSystem : EntitySystem
     private void OnSpiderTargetedHealAction(EntityUid uid, SpiderTargetedHealComponent component, SpiderTargetedHealEntityTargetActionEvent args)
     {
         if (args.Handled || !(HasComp<SpiderComponent>(args.Target)))
+        {
+            args.Handled = true;
             return;
+        }
 
         args.Handled = TryTargetedHeal(uid, component, args.Target);
     }
@@ -66,7 +66,7 @@ public sealed class SpiderTargetedHealSystem : EntitySystem
             return false;
         }
 
-        var doAfter = new DoAfterArgs(EntityManager, uid, component.HealTime, new SpiderTargetedHealDoAfterEvent(), null, target: target)
+        var doAfter = new DoAfterArgs(EntityManager, uid, component.HealTime, new SpiderTargetedHealDoAfterEvent(), uid, target)
         {
             BreakOnDamage = true,
             BreakOnTargetMove = true,
@@ -79,7 +79,7 @@ public sealed class SpiderTargetedHealSystem : EntitySystem
 
     private void OnDoAfter(EntityUid uid, SpiderTargetedHealComponent component, SpiderTargetedHealDoAfterEvent args)
     {
-        
+
         if (args.Cancelled || args.Handled)
         {
             return;
@@ -139,16 +139,5 @@ public sealed class SpiderTargetedHealSystem : EntitySystem
         }
 
         args.Handled = true;
-    }
-
-    //Checks if there's already an egg on the tile
-    private bool IsTileBlockedByEgg(EntityCoordinates coords)
-    {
-        foreach (var entity in coords.GetEntitiesInTile())  //use _lookup
-        {
-            if (HasComp<SpiderEggComponent>(entity))
-                return true;
-        }
-        return false;
     }
 }

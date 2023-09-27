@@ -31,7 +31,7 @@ public sealed partial class SpiderTargetedHealComponent : Component
 
     [ViewVariables(VVAccess.ReadWrite)]
     [DataField("healTime")]
-    public int HealTime = 10;
+    public int HealTime = 5;
 
     [DataField("healingSound")]
     public SoundSpecifier HealingSound = new SoundPathSpecifier("/Audio/Effects/pop.ogg");
