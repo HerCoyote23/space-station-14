@@ -1,4 +1,3 @@
-using Content.Server.Actions;
 using Content.Server.Body.Components;
 using Content.Server.Body.Systems;
 using Content.Server.DoAfter;
@@ -6,25 +5,15 @@ using Content.Server.Popups;
 using Content.Shared.Actions;
 using Content.Shared.Damage;
 using Content.Shared.DoAfter;
-using Content.Shared.FixedPoint;
-using Content.Shared.Mobs.Components;
 using Content.Shared.Spider.Components;
-using Content.Shared.Mobs;
-using Content.Shared.Spider.Systems;
-using Content.Shared.Storage;
-using Content.Shared.Maps;
 using Robust.Server.GameObjects;
-using Robust.Shared.Player;
-using Robust.Shared.Map;
 using Robust.Shared.Network;
-using Robust.Shared.Network.Messages;
 
 namespace Content.Server.Spider.Systems;
 
 public sealed class SpiderTargetedHealSystem : EntitySystem
 {
     [Dependency] private readonly SharedActionsSystem _action = default!;
-    [Dependency] private readonly AudioSystem _audio = default!;
     [Dependency] private readonly DoAfterSystem _doAfterSystem = default!;
     [Dependency] private readonly PopupSystem _popup = default!;
     [Dependency] private readonly BloodstreamSystem _bloodstreamSystem = default!;
@@ -80,21 +69,17 @@ public sealed class SpiderTargetedHealSystem : EntitySystem
     private void OnDoAfter(EntityUid uid, SpiderTargetedHealComponent component, SpiderTargetedHealDoAfterEvent args)
     {
 
-        if (args.Cancelled || args.Handled)
+        if (args.Cancelled || args.Handled || (args.Target == null))
         {
             return;
         }
 
         var target = args.Target;
 
-        if (target == null)
-        {
-            return;
-        }
-
+        //You can't heal yourself.
         if (target == uid)
         {
-            _popup.PopupEntity(Loc.GetString("You cannot heal yourself"), uid, uid);
+            _popup.PopupEntity(Loc.GetString("spider-targeted-heal-self"), uid, uid);
             return;
         }
 
@@ -116,7 +101,7 @@ public sealed class SpiderTargetedHealSystem : EntitySystem
         {
             DamageSpecifier finalHealing = new(damage.Damage);
 
-            int count = 0;
+            var count = 0;
 
             foreach (var val in finalHealing.DamageDict.Values)
             {
@@ -135,7 +120,7 @@ public sealed class SpiderTargetedHealSystem : EntitySystem
             }
 
             _damageable.TryChangeDamage(target, finalHealing, true, origin: uid);
-            _popup.PopupEntity(Loc.GetString("Damage Healed"), uid, uid);
+            _popup.PopupEntity(Loc.GetString("spider-targeted-heal-complete"), uid, uid);
         }
 
         args.Handled = true;

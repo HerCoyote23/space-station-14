@@ -24,6 +24,9 @@ public sealed partial class SpiderEggLayerComponent : Component
     [DataField("eggLayTime")]
     public TimeSpan EggLayTime = TimeSpan.FromSeconds(10);
 
+    /// <summary>
+    ///     Special points for laying Enriched Eggs
+    /// </summary>
     [ViewVariables(VVAccess.ReadWrite)]
     [DataField("enrichment")]
     public int Enrichment = 0;
@@ -34,9 +37,6 @@ public sealed partial class SpiderEggLayerComponent : Component
 
     [DataField("eggLaySound")]
     public SoundSpecifier EggLaySound = new SoundPathSpecifier("/Audio/Effects/pop.ogg");
-
-    [DataField("accumulatedFrametime")]
-    public float AccumulatedFrametime;
 }
 
 public sealed partial class SpiderEggLayInstantActionEvent : InstantActionEvent {}

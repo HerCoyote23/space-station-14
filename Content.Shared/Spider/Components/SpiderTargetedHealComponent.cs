@@ -17,24 +17,30 @@ public sealed partial class SpiderTargetedHealComponent : Component
     [DataField("targetedHealAction", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
     public string SpiderTargetedHealAction = "ActionSpiderTargetedHeal";
 
+    /// <summary>
+    ///     % current damage healing.
+    /// </summary>
     [ViewVariables(VVAccess.ReadWrite)]
     [DataField("percentHealing")]
     public double PercentHealing = 20;
 
+    /// <summary>
+    ///     Flat healing to be added to the % damage heal.
+    /// </summary>
     [ViewVariables(VVAccess.ReadWrite)]
     [DataField("flatHealing")]
     public int FlatHealing = 10;
 
+    /// <summary>
+    ///     How much blood the heal regenerates.
+    /// </summary>
     [ViewVariables(VVAccess.ReadWrite)]
     [DataField("bloodHealing")]
     public int BloodHealing = 25;
 
     [ViewVariables(VVAccess.ReadWrite)]
     [DataField("healTime")]
-    public int HealTime = 5;
-
-    [DataField("healingSound")]
-    public SoundSpecifier HealingSound = new SoundPathSpecifier("/Audio/Effects/pop.ogg");
+    public int HealTime = 4;
 }
 
 public sealed partial class SpiderTargetedHealEntityTargetActionEvent : EntityTargetActionEvent { }

@@ -87,7 +87,7 @@ public sealed class SpiderEggLayerSystem : EntitySystem
         }
 
         Spawn(component.EggSpawn, Transform(uid).Coordinates);
-        
+
         // Sound + popups
         _audio.PlayPvs(component.EggLaySound, uid);
         _popup.PopupEntity(Loc.GetString("action-popup-lay-egg-user"), uid, uid);

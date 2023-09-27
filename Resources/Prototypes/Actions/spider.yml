@@ -26,8 +26,8 @@
   noSpawn: true
   components:
   - type: EntityTargetAction
-    icon: { sprite : Interface/Actions/devour.rsi, state: icon }
-    iconOn: { sprite : Interface/Actions/devour.rsi, state: icon-on }
+    icon: { sprite : Interface/Actions/spider.rsi, state: spiderheal }
+    iconOn: { sprite : Interface/Actions/spider.rsi, state: spiderheal-on }
     event: !type:SpiderTargetedHealEntityTargetActionEvent
     useDelay: 1
 
