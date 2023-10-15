@@ -38,9 +38,12 @@ public sealed partial class SpiderTargetedHealComponent : Component
     [DataField("bloodHealing")]
     public int BloodHealing = 25;
 
+    /// <summary>
+    ///     How long the heal takes.
+    /// </summary>
     [ViewVariables(VVAccess.ReadWrite)]
     [DataField("healTime")]
-    public int HealTime = 4;
+    public int HealTime = 3;
 }
 
 public sealed partial class SpiderTargetedHealEntityTargetActionEvent : EntityTargetActionEvent { }
