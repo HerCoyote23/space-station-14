@@ -530,6 +530,10 @@
     Poison:
       metabolismRate: 0.05
       effects:
+      - !type:Emote
+        emote: Honk
+        showInChat: true
+        probability: 0.2
       - !type:HealthChange
         conditions:
         - !type:ReagentThreshold
@@ -539,6 +543,7 @@
         damage:
           types:
             Poison: 0.06
+            
 
 - type: reagent
   id: Lead
@@ -570,4 +575,8 @@
       - !type:HealthChange
         damage:
           types:
+<<<<<<< HEAD
             Poison: 1.8
+=======
+            Poison: 1.8
+>>>>>>> 98420b5735fe288284ee39f2aff11a28d3550f0b
