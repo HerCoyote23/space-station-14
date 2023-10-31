@@ -1,23 +1,100 @@
 using System.Linq;
+using Content.Server.DoAfter;
 using Content.Server.Popups;
+using Content.Shared.Actions;
+using Content.Shared.DoAfter;
 using Content.Shared.Spider.Components;
 using Content.Shared.Spider.Systems;
 using Content.Shared.Maps;
 using Robust.Server.GameObjects;
+using Robust.Shared.Player;
 using Robust.Shared.Map;
+using Robust.Shared.Network;
 
 namespace Content.Server.Spider.Systems;
 
 public sealed class SpiderSystem : SharedSpiderSystem
 {
+    [Dependency] private readonly DoAfterSystem _doAfterSystem = default!;
     [Dependency] private readonly PopupSystem _popup = default!;
+    [Dependency] private readonly EntityLookupSystem _lookup = default!;
 
     public override void Initialize()
     {
         base.Initialize();
-        SubscribeLocalEvent<SpiderComponent, SpiderWebActionEvent>(OnSpawnNet);
+        SubscribeLocalEvent<SpiderComponent, SpiderWebInstantActionEvent>(OnSpiderWebPlaceAction);
+        SubscribeLocalEvent<SpiderComponent, SpiderWebPlaceDoAfterEvent>(OnDoAfter);
     }
 
+    private void OnSpiderWebPlaceAction(EntityUid uid, SpiderComponent component, SpiderWebInstantActionEvent args)
+    {
+        args.Handled = TryPlaceWeb(uid, component);
+    }
+
+    public bool TryPlaceWeb(EntityUid uid, SpiderComponent? component)
+    {
+        if (!Resolve(uid, ref component))
+        {
+            return false;
+        }
+
+        var transform = Transform(uid);
+
+        if (transform.GridUid == null)
+        {
+            //_popup.PopupEntity(Loc.GetString("spider-web-action-nogrid"), args.Performer, args.Performer);
+            return false;
+        }
+
+        var coords = transform.Coordinates;
+
+        if (!IsTileBlockedByWeb(coords))
+        {
+            var doAfter = new DoAfterArgs(EntityManager, uid, component.WebPlaceTime, new SpiderWebPlaceDoAfterEvent(), uid)
+            {
+                BreakOnDamage = true,
+                BreakOnUserMove = true,
+                MovementThreshold = 0.2f,
+            };
+
+            return (_doAfterSystem.TryStartDoAfter(doAfter));
+        }
+        else
+        {
+            _popup.PopupEntity(Loc.GetString("spider-egg-action-tilefull"), uid, uid);
+        }
+
+        return false;
+    }
+
+    private void OnDoAfter(EntityUid uid, SpiderComponent component, SpiderWebPlaceDoAfterEvent args)
+    {
+
+        if (args.Cancelled || args.Handled)
+        {
+            return;
+        }
+
+        Spawn(component.WebPrototype, Transform(uid).Coordinates);
+
+        args.Handled = true;
+    }
+
+    //Checks if there's already a web on the tile
+    private bool IsTileBlockedByWeb(EntityCoordinates coords)
+    {
+        foreach (var entity in _lookup.GetEntitiesIntersecting(coords))//coords.GetEntitiesInTile())  //use _lookup
+        {
+            if (HasComp<SpiderWebObjectComponent>(entity))
+                return true;
+        }
+        return false;
+    }
+}
+
+
+
+/*
     private void OnSpawnNet(EntityUid uid, SpiderComponent component, SpiderWebActionEvent args)
     {
         if (args.Handled)
@@ -74,5 +151,6 @@ public sealed class SpiderSystem : SharedSpiderSystem
         }
         return false;
     }
-}
+    */
+
 

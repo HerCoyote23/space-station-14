@@ -6,8 +6,8 @@
   components:
   - type: InstantAction
     icon: Interface/Actions/web.png
-    event: !type:SpiderWebActionEvent
-    useDelay: 25
+    event: !type:SpiderWebInstantActionEvent
+    useDelay: 1
 
 - type: entity
   id: ActionSpiderLayEgg

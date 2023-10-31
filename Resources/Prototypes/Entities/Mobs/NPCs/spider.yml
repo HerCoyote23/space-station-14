@@ -66,7 +66,6 @@
     interactFailureString: petting-failure-generic
   - type: NoSlip
   - type: Spider
-    webMakingTime: 5
   - type: IgnoreSpiderWeb
   - type: Bloodstream
     bloodMaxVolume: 150
@@ -186,6 +185,8 @@
     transferAmount: 0.25
     solution: melee
   - type: SpiderTargetedHeal
+  - type: Spider
+    webPlaceTime: 2
 
 - type: entity
   name: viper
@@ -294,22 +295,8 @@
   - type: SpiderEggLayer
     enrichment: 1
     eggLayTime: 1
-
-- type: entity
-  id: FoodEggSpiderFertilized
-  parent: FoodEgg
-  suffix: Fertilized, Spider
-  components:
-  - type: Timer
-  - type: TimedSpawner
-    prototypes:
-    - MobHunterSpiderAngry
-    - MobGuardSpiderAngry
-    intervalSeconds: 20
-    minimumEntitiesSpawned: 1
-    maximumEntitiesSpawned: 1
-  - type: TimedDespawn #delete the egg after the chicken spawns
-    lifetime: 21
+  - type: Spider
+    webPlaceTime: 2
 
 - type: entity
   name: hunter
@@ -485,3 +472,7 @@
   - type: Tag
     tags:
       - Unstackable
+  - type: GhostRole
+    makeSentient: true
+    name: ghost-role-information-spider-egg-name
+    description: ghost-role-information-giant-spider-description
