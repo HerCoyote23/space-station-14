@@ -34,7 +34,7 @@ public sealed class SpiderTargetedHealSystem : EntitySystem
         if (_net.IsClient)
             return;
 
-        _action.AddAction(uid, Spawn(component.SpiderTargetedHealAction), null);
+        _action.AddAction(uid, ref component.Action, component.SpiderTargetedHealAction);
     }
 
     private void OnSpiderTargetedHealAction(EntityUid uid, SpiderTargetedHealComponent component, SpiderTargetedHealEntityTargetActionEvent args)

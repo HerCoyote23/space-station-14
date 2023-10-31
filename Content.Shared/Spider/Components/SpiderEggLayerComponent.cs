@@ -37,6 +37,8 @@ public sealed partial class SpiderEggLayerComponent : Component
 
     [DataField("eggLaySound")]
     public SoundSpecifier EggLaySound = new SoundPathSpecifier("/Audio/Effects/pop.ogg");
+
+    [DataField] public EntityUid? Action;
 }
 
 public sealed partial class SpiderEggLayInstantActionEvent : InstantActionEvent {}

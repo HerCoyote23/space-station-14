@@ -44,6 +44,8 @@ public sealed partial class SpiderTargetedHealComponent : Component
     [ViewVariables(VVAccess.ReadWrite)]
     [DataField("healTime")]
     public int HealTime = 3;
+
+    [DataField] public EntityUid? Action;
 }
 
 public sealed partial class SpiderTargetedHealEntityTargetActionEvent : EntityTargetActionEvent { }

@@ -21,7 +21,6 @@ public sealed class SpiderEggLayerSystem : EntitySystem
     [Dependency] private readonly DoAfterSystem _doAfterSystem = default!;
     [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
     [Dependency] private readonly PopupSystem _popup = default!;
-
     [Dependency] private readonly EntityLookupSystem _lookup = default!;
     [Dependency] private readonly INetManager _net = default!;
 
@@ -39,7 +38,7 @@ public sealed class SpiderEggLayerSystem : EntitySystem
         if (_net.IsClient)
             return;
 
-        _action.AddAction(uid, Spawn(component.SpiderEggLayAction), null);
+        _action.AddAction(uid, ref component.Action, component.SpiderEggLayAction);
     }
 
     private void OnSpiderEggLayAction(EntityUid uid, SpiderEggLayerComponent component, SpiderEggLayInstantActionEvent args)
@@ -75,6 +74,10 @@ public sealed class SpiderEggLayerSystem : EntitySystem
 
             return (_doAfterSystem.TryStartDoAfter(doAfter));
         }
+        else
+        {
+            _popup.PopupEntity(Loc.GetString("spider-egg-action-tilefull"), uid, uid);
+        }
 
         return false;
     }
@@ -99,7 +102,7 @@ public sealed class SpiderEggLayerSystem : EntitySystem
     //Checks if there's already an egg on the tile
     private bool IsTileBlockedByEgg(EntityCoordinates coords)
     {
-        foreach (var entity in coords.GetEntitiesInTile())  //use _lookup
+        foreach (var entity in _lookup.GetEntitiesIntersecting(coords))//coords.GetEntitiesInTile())  //use _lookup
         {
             if (HasComp<SpiderEggComponent>(entity))
                 return true;

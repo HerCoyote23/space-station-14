@@ -575,8 +575,4 @@
       - !type:HealthChange
         damage:
           types:
-<<<<<<< HEAD
             Poison: 1.8
-=======
-            Poison: 1.8
->>>>>>> 98420b5735fe288284ee39f2aff11a28d3550f0b
