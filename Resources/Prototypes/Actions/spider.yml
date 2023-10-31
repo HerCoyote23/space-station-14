@@ -18,6 +18,8 @@
     icon: Structures/Specific/spider_building.rsi/egg.png
     event: !type:SpiderEggLayInstantActionEvent
     useDelay: 1
+    conditions:
+    - !type:NoUnstackableInTile
 
 - type: entity
   id: ActionSpiderTargetedHeal

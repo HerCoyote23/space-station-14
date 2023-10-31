@@ -22,11 +22,7 @@ public sealed partial class SpiderComponent : Component
     [DataField("webAction", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
     public string WebAction = "ActionSpiderWeb";
 
-<<<<<<< HEAD:Content.Shared/Spider/Components/SpiderComponent.cs
-
-=======
     [DataField] public EntityUid? Action;
->>>>>>> 98420b5735fe288284ee39f2aff11a28d3550f0b:Content.Shared/Spider/SpiderComponent.cs
 }
 
 public sealed partial class SpiderWebActionEvent : InstantActionEvent { }

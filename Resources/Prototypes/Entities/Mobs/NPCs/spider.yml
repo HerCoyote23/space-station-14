@@ -482,4 +482,6 @@
     canCollide: false
     bodyType: static
   - type: SpiderEgg
-
+  - type: Tag
+    tags:
+      - Unstackable
