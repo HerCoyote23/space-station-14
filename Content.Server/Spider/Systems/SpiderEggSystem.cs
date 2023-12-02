@@ -37,10 +37,6 @@ public sealed class SpiderEggSystem : EntitySystem
     {
         if (_net.IsClient)
             return;
-
-
-
-        _action.AddAction(uid, ref component.Action, component.SpiderEggLayAction);
     }
 
     private void OnSpiderEggLayAction(EntityUid uid, SpiderEggLayerComponent component, SpiderEggLayInstantActionEvent args)
