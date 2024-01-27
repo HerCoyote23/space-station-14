@@ -46,15 +46,4 @@ namespace Content.Shared.Ghost.Roles
             Identifier = identifier;
         }
     }
-
-    [NetSerializable, Serializable]
-    public sealed class GhostRoleVariantSetMessage : EuiMessageBase
-    {
-        public uint Identifier { get; }
-
-        public GhostRoleVariantRequestMessage(uint identifier)
-        {
-            Identifier = identifier;
-        }
-    }
 }

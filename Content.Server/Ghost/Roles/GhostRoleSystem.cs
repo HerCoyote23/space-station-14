@@ -27,7 +27,7 @@ using Robust.Shared.Utility;
 namespace Content.Server.Ghost.Roles
 {
     [UsedImplicitly]
-    public class GhostRoleSystem : EntitySystem
+    public sealed class GhostRoleSystem : EntitySystem
     {
         [Dependency] private readonly EuiManager _euiManager = default!;
         [Dependency] private readonly IPlayerManager _playerManager = default!;

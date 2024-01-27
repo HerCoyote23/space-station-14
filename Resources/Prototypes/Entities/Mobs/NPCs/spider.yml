@@ -476,6 +476,3 @@
     makeSentient: true
     name: ghost-role-information-spider-egg-name
     description: ghost-role-information-giant-spider-description
-    variants:
-        - MobTarantulaSpider
-  - type: GhostTakeoverAvailable
