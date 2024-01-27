@@ -28,7 +28,7 @@ public sealed class SpiderEggSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<SpiderEggComponent, ComponentInit>(OnComponentInit);/*
+        /*SubscribeLocalEvent<SpiderEggComponent, GhostRoleTakenEvent(OnGhostTake);
         SubscribeLocalEvent<SpiderEggComponent, SpiderEggLayInstantActionEvent>(OnSpiderEggLayAction);
         SubscribeLocalEvent<SpiderEggComponent, SpiderEggLayDoAfterEvent>(OnDoAfter);*/
     }

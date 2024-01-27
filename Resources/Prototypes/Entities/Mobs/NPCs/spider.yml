@@ -109,6 +109,11 @@
   - type: MeleeChemicalInjector
     transferAmount: 1
     solution: melee
+  - type: GhostTakeoverAvailable
+    makeSentient: true
+    name: Hunter Spider
+    description: You are the Rat King, scavenge food in order to produce rat minions to do your bidding.
+    rules: You are an antagonist, scavenge, attack, and grow your hoarde!
 
 - type: entity
   name: guard
@@ -474,4 +479,9 @@
     makeSentient: true
     name: ghost-role-information-spider-egg-name
     description: ghost-role-information-giant-spider-description
+  - type: GhostRoleMobSpawner
+    prototype: MobHunterSpider
+    name: ghost-role-information-spider-egg-name
+    description: ghost-role-information-giant-spider-description
+    rules: You are an intelligent and militant spider. Follow your broodmother's orders and expand the nest.
 

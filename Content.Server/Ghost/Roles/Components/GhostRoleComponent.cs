@@ -14,6 +14,7 @@ namespace Content.Server.Ghost.Roles.Components
         /// <summary>
         /// Available variants of this ghost role. Upon choosing a variant and requesting the role, the spawner is replaced with that variant. Example: spider eggs.
         /// </summary>
+        // TODO: Allow the player to choose which variant they become.
         [DataField("variants")]
         public HashSet<string> Variants = new();
 

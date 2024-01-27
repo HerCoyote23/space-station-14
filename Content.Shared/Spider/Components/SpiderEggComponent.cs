@@ -17,3 +17,6 @@ public sealed partial class SpiderEggComponent : Component
     [DataField("hatchTime")]
     public TimeSpan HatchTime = TimeSpan.FromSeconds(60);
 }
+/*
+[Serializable, NetSerializable]
+public sealed partial class GhostRoleTakenEvent : SimpleDoAfterEvent { }*/
