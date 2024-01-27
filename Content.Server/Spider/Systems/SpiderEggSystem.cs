@@ -37,47 +37,6 @@ public sealed class SpiderEggSystem : EntitySystem
     {
         if (_net.IsClient)
             return;
-
-
-
-        _action.AddAction(uid, ref component.Action, component.SpiderEggLayAction);
-    }
-
-    private void OnSpiderEggLayAction(EntityUid uid, SpiderEggLayerComponent component, SpiderEggLayInstantActionEvent args)
-    {
-        args.Handled = TryLayEgg(uid, component);
-    }
-
-    public bool TryLayEgg(EntityUid uid, SpiderEggLayerComponent? component)
-    {
-        if (!Resolve(uid, ref component))
-        {
-            return false;
-        }
-
-        var transform = Transform(uid);
-
-        if (transform.GridUid == null)
-        {
-            //_popup.PopupEntity(Loc.GetString("spider-web-action-nogrid"), args.Performer, args.Performer);
-            return false;
-        }
-
-        var coords = transform.Coordinates;
-
-        return false;
-    }
-
-    private void OnDoAfter(EntityUid uid, SpiderEggLayerComponent component, SpiderEggLayDoAfterEvent args) {
-
-        if (args.Cancelled || args.Handled)
-        {
-            return;
-        }
-
-        Spawn(component.EggSpawn, Transform(uid).Coordinates);
-
-        args.Handled = true;
     }
 }
 
