@@ -17,6 +17,16 @@ public sealed partial class SpiderEggLayerComponent : Component
     [DataField("eggLayAction", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
     public string SpiderEggLayAction = "ActionSpiderLayEgg";
 
+    [DataField("cocoonAction", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
+    public string SpiderCocoonAction = "ActionCocoonEgg";
+
+    /// <summary>
+    ///     Time taken to cocoon
+    /// </summary>
+    [ViewVariables(VVAccess.ReadWrite)]
+    [DataField("cocoonTime")]
+    public TimeSpan CocoonTime = TimeSpan.FromSeconds(10);
+
     /// <summary>
     ///     Time taken to lay an egg
     /// </summary>
@@ -35,15 +45,21 @@ public sealed partial class SpiderEggLayerComponent : Component
     [DataField("eggSpawn")]
     public string EggSpawn = "SpiderEgg";
 
+
     [DataField("eggLaySound")]
     public SoundSpecifier EggLaySound = new SoundPathSpecifier("/Audio/Effects/pop.ogg");
 
     [DataField] public EntityUid? Action;
 }
 
-public sealed partial class SpiderEggLayInstantActionEvent : InstantActionEvent {}
+public sealed partial class SpiderCocoonEntityTargetActionEvent : EntityTargetActionEvent { }
+
+[Serializable, NetSerializable]
+public sealed partial class SpiderCocoonDoAfterEvent : SimpleDoAfterEvent { }
+
+public sealed partial class SpiderEggLayInstantActionEvent : InstantActionEvent { }
 
 
 [Serializable, NetSerializable]
-public sealed partial class SpiderEggLayDoAfterEvent : SimpleDoAfterEvent {}
-
+public sealed partial class SpiderEggLayDoAfterEvent : SimpleDoAfterEvent {
+}

@@ -3,6 +3,7 @@ using Content.Server.DoAfter;
 using Content.Server.Popups;
 using Content.Shared.Actions;
 using Content.Shared.DoAfter;
+using Content.Shared.Humanoid;
 using Content.Shared.Spider.Components;
 using Content.Shared.Spider.Systems;
 using Content.Shared.Storage;
@@ -11,6 +12,7 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Player;
 using Robust.Shared.Map;
 using Robust.Shared.Network;
+using Content.Shared.Humanoid;
 
 namespace Content.Server.Spider.Systems;
 
@@ -29,8 +31,12 @@ public sealed class SpiderEggLayerSystem : EntitySystem
         base.Initialize();
 
         SubscribeLocalEvent<SpiderEggLayerComponent, ComponentInit>(OnComponentInit);
+        SubscribeLocalEvent<SpiderEggLayerComponent, SpiderCocoonEntityTargetActionEvent>(OnSpiderCocoonAction);
+        //SubscribeLocalEvent<SpiderEggLayerComponent, SpiderCocoonComplete>(OnSpiderCocoonComplete);
+        SubscribeLocalEvent<SpiderEggLayerComponent, SpiderCocoonDoAfterEvent>(OnCocoonDoAfter);
+        //SubscribeLocalEvent<SpiderEggLayerComponent, SpiderCocoonCancelledEvent>(OnSpiderCocoonCancelled);
         SubscribeLocalEvent<SpiderEggLayerComponent, SpiderEggLayInstantActionEvent>(OnSpiderEggLayAction);
-        SubscribeLocalEvent<SpiderEggLayerComponent, SpiderEggLayDoAfterEvent>(OnDoAfter);
+        SubscribeLocalEvent<SpiderEggLayerComponent, SpiderEggLayDoAfterEvent>(OnEggDoAfter);
     }
 
     private void OnComponentInit(EntityUid uid, SpiderEggLayerComponent component, ComponentInit args)
@@ -39,6 +45,36 @@ public sealed class SpiderEggLayerSystem : EntitySystem
             return;
 
         _action.AddAction(uid, ref component.Action, component.SpiderEggLayAction);
+        _action.AddAction(uid, ref component.Action, component.SpiderCocoonAction);
+    }
+
+    private void OnSpiderCocoonAction(EntityUid uid, SpiderEggLayerComponent component, SpiderCocoonEntityTargetActionEvent args)
+    {
+        if (args.Handled || !(HasComp<HumanoidAppearanceComponent>(args.Target)))
+        {
+            args.Handled = true;
+            return;
+        }
+
+        args.Handled = TryCocoon(uid, component, args.Target);
+    }
+
+    public bool TryCocoon(EntityUid uid, SpiderEggLayerComponent? component, EntityUid target)
+    {
+        if (!Resolve(uid, ref component))
+        {
+            return false;
+        }
+
+        var doAfter = new DoAfterArgs(EntityManager, uid, component.CocoonTime, new SpiderCocoonDoAfterEvent(), uid, target)
+        {
+            BreakOnDamage = true,
+            BreakOnTargetMove = true,
+            BreakOnUserMove = true,
+            MovementThreshold = 0.2f,
+        };
+
+        return _doAfterSystem.TryStartDoAfter(doAfter);
     }
 
     private void OnSpiderEggLayAction(EntityUid uid, SpiderEggLayerComponent component, SpiderEggLayInstantActionEvent args)
@@ -82,7 +118,25 @@ public sealed class SpiderEggLayerSystem : EntitySystem
         return false;
     }
 
-    private void OnDoAfter(EntityUid uid, SpiderEggLayerComponent component, SpiderEggLayDoAfterEvent args) {
+    private void OnCocoonDoAfter(EntityUid uid, SpiderEggLayerComponent component, SpiderCocoonDoAfterEvent args)
+    {
+
+        if (args.Cancelled || args.Handled || (args.Target == null))
+        {
+            return;
+        }
+
+        Spawn("SpiderCocoon", Transform((EntityUid) args.Target).Coordinates);
+
+        // Sound + popups
+        _audio.PlayPvs(component.EggLaySound, uid);
+        _popup.PopupEntity(Loc.GetString("action-popup-lay-egg-user"), uid, uid);
+        _popup.PopupEntity(Loc.GetString("action-popup-lay-egg-others", ("entity", uid)), uid, Filter.PvsExcept(uid), true);
+
+        args.Handled = true;
+    }
+
+    private void OnEggDoAfter(EntityUid uid, SpiderEggLayerComponent component, SpiderEggLayDoAfterEvent args) {
 
         if (args.Cancelled || args.Handled)
         {

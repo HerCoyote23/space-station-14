@@ -485,3 +485,41 @@
     description: ghost-role-information-giant-spider-description
     rules: You are an intelligent and militant spider. Follow your broodmother's orders and expand the nest.
 
+- type: entity
+  name: cocoon
+  parent: BaseStructure
+  id: SpiderCocoon
+  description: Some poor sod's trapped in there.
+  placement:
+    mode: SnapgridCenter
+    snap:
+    - Wall
+  components:
+  - type: Sprite
+    sprite: Structures/Specific/spider_building.rsi
+    state: egg
+    drawdepth: FloorObjects  #uncertain if this is the right depth
+  - type: Icon
+    sprite: Structures/Specific/spider_building.rsi
+    state: egg
+  - type: Damageable
+    damageContainer: Inorganic
+    damageModifierSet: Web
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 60
+      behaviors:
+      - !type:DoActsBehavior
+       acts: ["Destruction"]
+  - type: Physics
+    canCollide: false
+    bodyType: static
+  - type: Tag
+    tags:
+      - Unstackable
+  - type: EntityStorage
+  - type: ContainerContainer
+    containers:
+      entity_storage: !type:Container

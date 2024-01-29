@@ -20,6 +20,17 @@
     useDelay: 1
 
 - type: entity
+  id: ActionCocoon
+  name: action-name-cocoon
+  description: action-description-cocoon
+  components:
+  - type: EntityTargetAction
+    icon: { sprite : Interface/Actions/actions_spider.rsi, state: spiderheal }
+    iconOn: { sprite : Interface/Actions/actions_spider.rsi, state: spiderheal-on }
+    event: !type:SpiderCocoonEntityTargetActionEvent
+    useDelay: 1
+
+- type: entity
   id: ActionSpiderTargetedHeal
   name: action-name-spider-targeted-heal
   description: action-description-spider-targeted-heal
