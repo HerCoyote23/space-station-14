@@ -20,7 +20,7 @@
     useDelay: 1
 
 - type: entity
-  id: ActionCocoon
+  id: ActionSpiderCocoon
   name: action-name-cocoon
   description: action-description-cocoon
   components:

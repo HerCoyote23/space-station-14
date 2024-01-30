@@ -45,7 +45,7 @@ public sealed class SpiderEggLayerSystem : EntitySystem
             return;
 
         _action.AddAction(uid, ref component.Action, component.SpiderEggLayAction);
-        _action.AddAction(uid, ref component.Action, component.SpiderCocoonAction);
+        _action.AddAction(uid, component.SpiderCocoonAction);
     }
 
     private void OnSpiderCocoonAction(EntityUid uid, SpiderEggLayerComponent component, SpiderCocoonEntityTargetActionEvent args)
@@ -77,6 +77,24 @@ public sealed class SpiderEggLayerSystem : EntitySystem
         return _doAfterSystem.TryStartDoAfter(doAfter);
     }
 
+    private void OnCocoonDoAfter(EntityUid uid, SpiderEggLayerComponent component, SpiderCocoonDoAfterEvent args)
+    {
+
+        if (args.Cancelled || args.Handled || (args.Target == null))
+        {
+            return;
+        }
+
+        Spawn("SpiderCocoon", Transform((EntityUid) args.Target).Coordinates);
+
+        // Sound + popups
+        _audio.PlayPvs(component.EggLaySound, uid);
+        _popup.PopupEntity(Loc.GetString("action-popup-lay-egg-user"), uid, uid);
+        _popup.PopupEntity(Loc.GetString("action-popup-lay-egg-others", ("entity", uid)), uid, Filter.PvsExcept(uid), true);
+
+        args.Handled = true;
+    }
+
     private void OnSpiderEggLayAction(EntityUid uid, SpiderEggLayerComponent component, SpiderEggLayInstantActionEvent args)
     {
         args.Handled = TryLayEgg(uid, component);
@@ -93,7 +111,7 @@ public sealed class SpiderEggLayerSystem : EntitySystem
 
         if (transform.GridUid == null)
         {
-            //_popup.PopupEntity(Loc.GetString("spider-web-action-nogrid"), args.Performer, args.Performer);
+            _popup.PopupEntity(Loc.GetString("spider-egg-action-nogrid"), args.Performer, args.Performer);
             return false;
         }
 
@@ -116,24 +134,6 @@ public sealed class SpiderEggLayerSystem : EntitySystem
         }
 
         return false;
-    }
-
-    private void OnCocoonDoAfter(EntityUid uid, SpiderEggLayerComponent component, SpiderCocoonDoAfterEvent args)
-    {
-
-        if (args.Cancelled || args.Handled || (args.Target == null))
-        {
-            return;
-        }
-
-        Spawn("SpiderCocoon", Transform((EntityUid) args.Target).Coordinates);
-
-        // Sound + popups
-        _audio.PlayPvs(component.EggLaySound, uid);
-        _popup.PopupEntity(Loc.GetString("action-popup-lay-egg-user"), uid, uid);
-        _popup.PopupEntity(Loc.GetString("action-popup-lay-egg-others", ("entity", uid)), uid, Filter.PvsExcept(uid), true);
-
-        args.Handled = true;
     }
 
     private void OnEggDoAfter(EntityUid uid, SpiderEggLayerComponent component, SpiderEggLayDoAfterEvent args) {

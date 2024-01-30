@@ -18,7 +18,7 @@ public sealed partial class SpiderEggLayerComponent : Component
     public string SpiderEggLayAction = "ActionSpiderLayEgg";
 
     [DataField("cocoonAction", customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
-    public string SpiderCocoonAction = "ActionCocoonEgg";
+    public string SpiderCocoonAction = "ActionSpiderCocoon";
 
     /// <summary>
     ///     Time taken to cocoon
