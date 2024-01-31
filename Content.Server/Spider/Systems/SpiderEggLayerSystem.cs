@@ -16,7 +16,7 @@ using Content.Shared.Humanoid;
 
 namespace Content.Server.Spider.Systems;
 
-public sealed class SpiderEggLayerSystem : EntitySystem
+public sealed class SpiderEggLayerSystem : SharedSpiderEggLayerSystem
 {
     [Dependency] private readonly SharedActionsSystem _action = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
@@ -30,22 +30,10 @@ public sealed class SpiderEggLayerSystem : EntitySystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<SpiderEggLayerComponent, ComponentInit>(OnComponentInit);
         SubscribeLocalEvent<SpiderEggLayerComponent, SpiderCocoonEntityTargetActionEvent>(OnSpiderCocoonAction);
-        //SubscribeLocalEvent<SpiderEggLayerComponent, SpiderCocoonComplete>(OnSpiderCocoonComplete);
         SubscribeLocalEvent<SpiderEggLayerComponent, SpiderCocoonDoAfterEvent>(OnCocoonDoAfter);
-        //SubscribeLocalEvent<SpiderEggLayerComponent, SpiderCocoonCancelledEvent>(OnSpiderCocoonCancelled);
         SubscribeLocalEvent<SpiderEggLayerComponent, SpiderEggLayInstantActionEvent>(OnSpiderEggLayAction);
         SubscribeLocalEvent<SpiderEggLayerComponent, SpiderEggLayDoAfterEvent>(OnEggDoAfter);
-    }
-
-    private void OnComponentInit(EntityUid uid, SpiderEggLayerComponent component, ComponentInit args)
-    {
-        if (_net.IsClient)
-            return;
-
-        _action.AddAction(uid, ref component.Action, component.SpiderEggLayAction);
-        _action.AddAction(uid, component.SpiderCocoonAction);
     }
 
     private void OnSpiderCocoonAction(EntityUid uid, SpiderEggLayerComponent component, SpiderCocoonEntityTargetActionEvent args)
@@ -85,7 +73,10 @@ public sealed class SpiderEggLayerSystem : EntitySystem
             return;
         }
 
-        Spawn("SpiderCocoon", Transform((EntityUid) args.Target).Coordinates);
+        component.Enrichment += 1; // TODO: Make this only give enrichment if the target has not been cocooned once already this death
+        EntityUid cocoon = Spawn("SpiderCocoon", Transform((EntityUid) args.Target).Coordinates);
+
+        ContainerSystem.Insert(args.Target, cocoon);
 
         // Sound + popups
         _audio.PlayPvs(component.EggLaySound, uid);
@@ -111,7 +102,7 @@ public sealed class SpiderEggLayerSystem : EntitySystem
 
         if (transform.GridUid == null)
         {
-            _popup.PopupEntity(Loc.GetString("spider-egg-action-nogrid"), args.Performer, args.Performer);
+            //_popup.PopupEntity(Loc.GetString("spider-egg-action-nogrid"), args.Performer, args.Performer);
             return false;
         }
 

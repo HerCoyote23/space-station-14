@@ -296,8 +296,9 @@
       types:
         Piercing: 7
   - type: SpiderEggLayer
-    enrichment: 1
-    eggLayTime: 1
+    enrichment: 1 #For final build should be 0 or not declared at all
+    eggLayTime: 1 #final build should be 5s or so
+    cocoonTime: 1 #Final build should be 10s
   - type: Spider
     webPlaceTime: 2
 
@@ -498,7 +499,7 @@
   - type: Sprite
     sprite: Structures/Specific/spider_building.rsi
     state: egg
-    drawdepth: FloorObjects  #uncertain if this is the right depth
+    drawdepth: FloorObjects  # Uncertain if this is the right depth
   - type: Icon
     sprite: Structures/Specific/spider_building.rsi
     state: egg
@@ -519,7 +520,10 @@
   - type: Tag
     tags:
       - Unstackable
+  - type: AntiRottingContainer
   - type: EntityStorage
+    airtight: true
   - type: ContainerContainer
     containers:
       entity_storage: !type:Container
+  - type: SpiderWebObject
