@@ -2,11 +2,7 @@ using Content.Shared.DoAfter;
 using Content.Shared.Storage;
 using Robust.Shared.Audio;
 using Robust.Shared.Prototypes;
-<<<<<<< HEAD:Content.Shared/Animals/EggLayerComponent.cs
-using Robust.Shared.Serialization;
 using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom.Prototype;
-=======
->>>>>>> ae533ef8fde0c712fd83e590151e3c149f62b691:Content.Server/Animals/Components/EggLayerComponent.cs
 
 namespace Content.Shared.Animals.Components;
 

@@ -647,7 +647,6 @@
     damage:
       types:
         Piercing: 8
-<<<<<<< HEAD
   - type: SolutionContainerManager
     solutions:
       melee:
@@ -662,9 +661,6 @@
   - type: NoSlip
   - type: Spider
   - type: IgnoreSpiderWeb
-=======
-        Poison: 8
->>>>>>> ae533ef8fde0c712fd83e590151e3c149f62b691
   - type: Grammar
     attributes:
       proper: true

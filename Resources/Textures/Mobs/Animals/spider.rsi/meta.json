@@ -37,17 +37,8 @@
         ]
       ]
     },
-<<<<<<< HEAD
     {
       "name": "broodmother",
-=======
-	{
-      "name": "midwife",
-      "directions": 4
-    },
-    {
-      "name": "midwife-moving",
->>>>>>> ae533ef8fde0c712fd83e590151e3c149f62b691
       "directions": 4,
       "delays": [
         [

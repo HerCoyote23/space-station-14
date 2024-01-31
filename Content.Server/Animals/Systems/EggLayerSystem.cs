@@ -2,7 +2,6 @@ using Content.Server.Actions;
 using Content.Server.DoAfter;
 using Content.Server.Popups;
 using Content.Shared.Actions.Events;
-using Content.Shared.Mobs.Systems;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Nutrition.EntitySystems;
 using Content.Shared.Storage;
@@ -75,10 +74,7 @@ public sealed class EggLayerSystem : EntitySystem
 
     public bool TryLayEgg(EntityUid uid, EggLayerComponent? egglayer)
     {
-        if (!Resolve(uid, ref egglayer))
-            return false;
-
-        if (_mobState.IsDead(uid))
+        if (!Resolve(uid, ref component))
             return false;
         }
 
