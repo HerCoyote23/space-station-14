@@ -37,12 +37,8 @@
         ]
       ]
     },
-	{
-      "name": "midwife",
-      "directions": 4
-    },
     {
-      "name": "midwife-moving",
+      "name": "broodmother",
       "directions": 4,
       "delays": [
         [
@@ -196,7 +192,7 @@
       ]
     },
     {
-      "name": "midwife_dead",
+      "name": "broodmother_dead",
       "delays": [
         [
           1

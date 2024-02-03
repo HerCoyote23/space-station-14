@@ -1,8 +1,8 @@
 using Content.Server.Actions;
-using Content.Server.Animals.Components;
+using Content.Server.DoAfter;
 using Content.Server.Popups;
 using Content.Shared.Actions.Events;
-using Content.Shared.Mobs.Systems;
+using Content.Shared.DoAfter;
 using Content.Shared.Nutrition.Components;
 using Content.Shared.Nutrition.EntitySystems;
 using Content.Shared.Storage;
@@ -11,10 +11,12 @@ using Robust.Server.GameObjects;
 using Robust.Shared.Player;
 using Robust.Shared.Random;
 
+using Content.Shared.Animals.Components;
+
 namespace Content.Server.Animals.Systems;
 
 /// <summary>
-///     Gives ability to produce eggs, produces endless if the 
+///     Gives ability to produce eggs, produces endless if the
 ///     owner has no HungerComponent
 /// </summary>
 public sealed class EggLayerSystem : EntitySystem
@@ -22,6 +24,8 @@ public sealed class EggLayerSystem : EntitySystem
     [Dependency] private readonly IRobustRandom _random = default!;
     [Dependency] private readonly ActionsSystem _actions = default!;
     [Dependency] private readonly AudioSystem _audio = default!;
+    [Dependency] private readonly DoAfterSystem _doAfterSystem = default!;
+    [Dependency] private readonly SharedDoAfterSystem _doAfter = default!;
     [Dependency] private readonly HungerSystem _hunger = default!;
     [Dependency] private readonly PopupSystem _popup = default!;
     [Dependency] private readonly MobStateSystem _mobState = default!;
@@ -32,6 +36,7 @@ public sealed class EggLayerSystem : EntitySystem
 
         SubscribeLocalEvent<EggLayerComponent, MapInitEvent>(OnMapInit);
         SubscribeLocalEvent<EggLayerComponent, EggLayInstantActionEvent>(OnEggLayAction);
+        SubscribeLocalEvent<EggLayerComponent, EggLayDoAfterEvent>(OnDoAfter);
     }
 
     public override void Update(float frameTime)
@@ -70,11 +75,28 @@ public sealed class EggLayerSystem : EntitySystem
 
     public bool TryLayEgg(EntityUid uid, EggLayerComponent? egglayer)
     {
-        if (!Resolve(uid, ref egglayer))
+        if (!Resolve(uid, ref component))
+        {
             return false;
+        }
 
-        if (_mobState.IsDead(uid))
-            return false;
+        var doAfter = new DoAfterArgs(EntityManager, uid, component.EggLayTime, new EggLayDoAfterEvent(), uid)
+        {
+            BreakOnDamage = true,
+            BreakOnUserMove = true,
+            MovementThreshold = 0.1f,
+        };
+
+        return (_doAfterSystem.TryStartDoAfter(doAfter));
+
+    }
+
+    private void OnDoAfter(EntityUid uid, EggLayerComponent component, EggLayDoAfterEvent args) {
+
+        if (args.Cancelled || args.Handled)
+        {
+            return;
+        }
 
         // Allow infinitely laying eggs if they can't get hungry
         if (TryComp<HungerComponent>(uid, out var hunger))
@@ -82,7 +104,8 @@ public sealed class EggLayerSystem : EntitySystem
             if (hunger.CurrentHunger < egglayer.HungerUsage)
             {
                 _popup.PopupEntity(Loc.GetString("action-popup-lay-egg-too-hungry"), uid, uid);
-                return false;
+
+                args.Handled = true;
             }
 
             _hunger.ModifyHunger(uid, -egglayer.HungerUsage, hunger);
@@ -98,6 +121,6 @@ public sealed class EggLayerSystem : EntitySystem
         _popup.PopupEntity(Loc.GetString("action-popup-lay-egg-user"), uid, uid);
         _popup.PopupEntity(Loc.GetString("action-popup-lay-egg-others", ("entity", uid)), uid, Filter.PvsExcept(uid), true);
 
-        return true;
+        args.Handled = true;
     }
 }

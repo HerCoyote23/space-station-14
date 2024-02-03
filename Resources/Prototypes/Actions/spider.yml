@@ -6,8 +6,41 @@
   components:
   - type: InstantAction
     icon: Interface/Actions/web.png
-    event: !type:SpiderWebActionEvent
-    useDelay: 25
+    event: !type:SpiderWebInstantActionEvent
+    useDelay: 1
+
+- type: entity
+  id: ActionSpiderLayEgg
+  name: action-name-lay-egg
+  description: action-description-lay-egg
+  components:
+  - type: InstantAction
+    icon: Structures/Specific/spider_building.rsi/egg.png
+    event: !type:SpiderEggLayInstantActionEvent
+    useDelay: 1
+
+- type: entity
+  id: ActionSpiderCocoon
+  name: action-name-cocoon
+  description: action-description-cocoon
+  components:
+  - type: EntityTargetAction
+    icon: { sprite : Interface/Actions/actions_spider.rsi, state: spiderheal }
+    iconOn: { sprite : Interface/Actions/actions_spider.rsi, state: spiderheal-on }
+    event: !type:SpiderCocoonEntityTargetActionEvent
+    useDelay: 1
+
+- type: entity
+  id: ActionSpiderTargetedHeal
+  name: action-name-spider-targeted-heal
+  description: action-description-spider-targeted-heal
+  noSpawn: true
+  components:
+  - type: EntityTargetAction
+    icon: { sprite : Interface/Actions/actions_spider.rsi, state: spiderheal }
+    iconOn: { sprite : Interface/Actions/actions_spider.rsi, state: spiderheal-on }
+    event: !type:SpiderTargetedHealEntityTargetActionEvent
+    useDelay: 1
 
 - type: entity
   id: ActionSericulture
