@@ -16,7 +16,7 @@ using Content.Shared.Animals.Components;
 namespace Content.Server.Animals.Systems;
 
 /// <summary>
-///     Gives ability to produce eggs, produces endless if the aa
+///     Gives ability to produce eggs, produces endless if the
 ///     owner has no HungerComponent
 /// </summary>
 public sealed class EggLayerSystem : EntitySystem
