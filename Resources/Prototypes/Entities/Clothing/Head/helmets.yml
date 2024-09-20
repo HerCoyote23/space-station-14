@@ -369,6 +369,32 @@
   - type: Clothing
     sprite: Clothing/Head/Helmets/ert_janitor.rsi
 
+ #BEGIN WORK --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+- type: entity
+  parent: [ BaseSyndicateContraband, ClothingHeadHelmetBase ]
+  id: ClothingHeadHelmetInfiltrator
+  name: syndicate infiltrator helmet
+  description: A super-sneaky-not-so-spaceproof helmet
+  components:
+  - type: Sprite
+    sprite: Clothing/Head/Hoods/syndicate_infiltrator.rsi
+  - type: Clothing
+    sprite: Clothing/Head/Hoods/syndicate_infiltrator.rsi
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 200
+        Slash: 200
+        Piercing: 200
+        Heat: 200
+  - type: HideLayerClothing
+    slots:
+    - Hair
+    - Snout
+    - HeadTop
+    - HeadSide
+#END WORK --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 - type: entity
   parent: [ BaseSyndicateContraband, ClothingHeadHelmetBase ]
   id: ClothingHeadHelmetRaid

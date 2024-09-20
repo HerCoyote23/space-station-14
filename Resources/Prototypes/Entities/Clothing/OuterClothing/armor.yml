@@ -99,29 +99,33 @@
     reflects:
       - Energy
 
+#BEGIN WORK -----------------------------------------------------------------------------------------------------------------------------
 - type: entity
-  parent: [ClothingOuterBaseLarge, AllowSuitStorageClothing, BaseSyndicateContraband ]
-  id: ClothingOuterArmorRaid
+  parent: [ClothingOuterBase, AllowSuitStorageClothing, BaseSyndicateContraband ]
+  id: ClothingOuterArmorInfiltrator
   name: syndicate infiltrator suit
   description: A super-sneaky-not-so-spaceproof suit
   components:
   - type: Sprite
-    sprite: Clothing/OuterClothing/Armor/syndicate_infiltrator.rsi
+    sprite: Clothing/OuterClothing/Suits/syndicate_infiltrator.rsi
   - type: Clothing
-    sprite: Clothing/OuterClothing/Armor/syndicate_infiltrator.rsi
+    sprite: Clothing/OuterClothing/Suits/syndicate_infiltrator.rsi
   - type: Armor
     modifiers:
       coefficients:
-        Blunt: 0
-        Slash: 0
-        Piercing: 0
-        Heat: 0
-        Caustic: 0
+        Blunt: 200
+        Slash: 200
+        Piercing: 200
+        Heat: 200
+        Caustic: 200
   - type: ExplosionResistance
-    damageCoefficient: 0
+    damageCoefficient: 20
   - type: ClothingSpeedModifier
     walkModifier: 1
     sprintModifier: 1
+  - type: ToggleableClothing
+    clothingPrototype: ClothingHeadHelmetInfiltrator
+#END WORK -----------------------------------------------------------------------------------------------------------------------------
 
 - type: entity
   parent: [ClothingOuterBaseLarge, AllowSuitStorageClothing, BaseSyndicateContraband ]
