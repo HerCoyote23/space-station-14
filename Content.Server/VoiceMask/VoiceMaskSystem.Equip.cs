@@ -19,7 +19,10 @@ public sealed partial class VoiceMaskSystem
         comp.VoiceName = component.LastSetName;
         comp.SpeechVerb = component.LastSpeechVerb;
 
-        _actions.AddAction(user, ref component.ActionEntity, component.Action, uid);
+        if (!component.Locked)
+        {
+            _actions.AddAction(user, ref component.ActionEntity, component.Action, uid);
+        }
     }
 
     private void OnUnequip(EntityUid uid, VoiceMaskerComponent compnent, ClothingGotUnequippedEvent args)
