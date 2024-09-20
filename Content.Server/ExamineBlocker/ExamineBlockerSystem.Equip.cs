@@ -1,6 +1,5 @@
 using Content.Shared.Clothing;
 using Content.Shared.ExamineBlocker;
-using Content.Shared.Inventory;
 
 namespace Content.Server.ExamineBlocker;
 

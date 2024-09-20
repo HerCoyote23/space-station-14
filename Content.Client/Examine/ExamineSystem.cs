@@ -8,6 +8,7 @@ using Content.Shared.IdentityManagement;
 using Content.Shared.Input;
 using Content.Shared.Interaction.Events;
 using Content.Shared.Item;
+using Content.Shared.Popups;
 using Content.Shared.Verbs;
 using JetBrains.Annotations;
 using Robust.Client.GameObjects;
@@ -27,6 +28,7 @@ namespace Content.Client.Examine
     [UsedImplicitly]
     public sealed class ExamineSystem : ExamineSystemShared
     {
+        [Dependency] private readonly SharedPopupSystem _popupSystem = default!;
         [Dependency] private readonly IUserInterfaceManager _userInterfaceManager = default!;
         [Dependency] private readonly IPlayerManager _playerManager = default!;
         [Dependency] private readonly IEyeManager _eyeManager = default!;
@@ -91,9 +93,6 @@ namespace Content.Client.Examine
             if (!Resolve(examiner, ref examinerComp, false))
                 return false;
 
-            if (HasComp<UnExaminableComponent>(examined))
-                return false;
-
             if (examinerComp.SkipChecks)
                 return true;
 
@@ -120,6 +119,12 @@ namespace Content.Client.Examine
             if (_playerManager.LocalEntity is not { } player ||
                 !CanExamine(player, entity))
             {
+                return false;
+            }
+
+            if (HasComp<UnExaminableComponent>(entity))
+            {
+                _popupSystem.PopupEntity(Loc.GetString("You're struggling to make out any details..."), player, player, PopupType.SmallCaution);
                 return false;
             }
 
