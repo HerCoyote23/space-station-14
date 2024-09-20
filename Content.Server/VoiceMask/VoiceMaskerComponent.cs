@@ -13,7 +13,6 @@ public sealed partial class VoiceMaskerComponent : Component
     public ProtoId<SpeechVerbPrototype>? LastSpeechVerb;
 
     [DataField("locked")]
-    [ViewVariables(VVAccess.ReadWrite)]
     public bool Locked = false;
 
     [DataField]

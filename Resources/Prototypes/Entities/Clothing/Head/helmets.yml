@@ -383,6 +383,7 @@
   - type: IdentityBlocker
   - type: VoiceMasker
     locked: true
+  - type: ExamineBlocker
   - type: Armor
     modifiers:
       coefficients:

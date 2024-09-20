@@ -3,6 +3,7 @@ using System.Numerics;
 using System.Threading;
 using Content.Client.Verbs;
 using Content.Shared.Examine;
+using Content.Shared.ExamineBlocker;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Input;
 using Content.Shared.Interaction.Events;
@@ -90,6 +91,9 @@ namespace Content.Client.Examine
             if (!Resolve(examiner, ref examinerComp, false))
                 return false;
 
+            if (HasComp<UnExaminableComponent>(examined))
+                return false;
+
             if (examinerComp.SkipChecks)
                 return true;
 
@@ -173,6 +177,7 @@ namespace Content.Client.Examine
         /// </summary>
         public void OpenTooltip(EntityUid player, EntityUid target, bool centeredOnCursor=true, bool openAtOldTooltip=true, bool knowTarget = true)
         {
+
             // Close any examine tooltip that might already be opened
             // Before we do that, save its position. We'll prioritize opening any new popups there if
             // openAtOldTooltip is true.
