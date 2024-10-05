@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Content.Shared.ExamineBlocker;
 using Content.Shared.Eye.Blinding.Components;
 using Content.Shared.Ghost;
 using Content.Shared.Interaction;
@@ -115,6 +116,9 @@ namespace Content.Shared.Examine
                 return true;
 
             if (EntityManager.GetComponent<TransformComponent>(examiner).MapID != target.MapId)
+                return false;
+
+            if (HasComp<UnExaminableComponent>(examined))
                 return false;
 
             // Do target InRangeUnoccluded which has different checks.

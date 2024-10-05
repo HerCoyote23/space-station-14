@@ -122,12 +122,6 @@ namespace Content.Client.Examine
                 return false;
             }
 
-            if (HasComp<UnExaminableComponent>(entity))
-            {
-                _popupSystem.PopupEntity(Loc.GetString("You're struggling to make out any details..."), player, player, PopupType.SmallCaution);
-                return false;
-            }
-
             DoExamine(entity);
             return true;
         }

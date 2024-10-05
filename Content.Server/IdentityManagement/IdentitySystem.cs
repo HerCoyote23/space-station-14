@@ -4,6 +4,7 @@ using Content.Server.CriminalRecords.Systems;
 using Content.Server.Humanoid;
 using Content.Shared.Clothing;
 using Content.Shared.Database;
+using Content.Shared.ExamineBlocker;
 using Content.Shared.Hands;
 using Content.Shared.Humanoid;
 using Content.Shared.IdentityManagement;
@@ -167,6 +168,15 @@ public sealed class IdentitySystem : SharedIdentitySystem
         {
             presumedName = string.IsNullOrWhiteSpace(id.Comp.FullName) ? null : id.Comp.FullName;
             presumedJob = id.Comp.JobTitle?.ToLowerInvariant();
+        }
+
+        // If they are wearing identity-blocking clothing, such as the infiltrator suit, scrub name, job, and gender.
+        // Examining is blocked elsewhere, this is to prevent popups and similar from revealing them.
+        if (HasComp<UnExaminableComponent>(target))
+        {
+            presumedName = "Unknown";
+            presumedJob = "???";
+            gender = Gender.Epicene;
         }
 
         // If it didn't find a job, that's fine.
