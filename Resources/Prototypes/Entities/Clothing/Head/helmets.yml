@@ -377,9 +377,9 @@
   description: A super-sneaky-not-so-spaceproof helmet
   components:
   - type: Sprite
-    sprite: Clothing/Head/Hoods/syndicate_infiltrator.rsi
+    sprite: Clothing/Head/Helmets/syndicate_infiltrator.rsi
   - type: Clothing
-    sprite: Clothing/Head/Hoods/syndicate_infiltrator.rsi
+    sprite: Clothing/Head/Helmets/syndicate_infiltrator.rsi
   - type: IdentityBlocker
   - type: VoiceMasker
     locked: true
