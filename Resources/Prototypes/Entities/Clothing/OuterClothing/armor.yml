@@ -125,6 +125,9 @@
     sprintModifier: 1
   - type: ToggleableClothing
     clothingPrototype: ClothingHeadHelmetInfiltrator
+  - type: HideLayerClothing
+    slots:
+    - Tail
 #END WORK -----------------------------------------------------------------------------------------------------------------------------
 
 - type: entity
